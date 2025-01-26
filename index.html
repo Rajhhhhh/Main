@@ -33,6 +33,11 @@
             outline: none;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             text-align: center;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        input[type="text"]:focus {
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); /* Light glow effect */
+            border-color: #00ffff; /* Border color change when focused */
         }
         hr {
             width: 90%;
