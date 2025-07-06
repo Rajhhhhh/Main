@@ -1,169 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PrivateTab</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Go to Facebook</title>
   <style>
-    * { box-sizing: border-box; }
-
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Courier New', monospace;
-      background-color: #000;
-      color: #00ff88;
-      overflow: hidden;
-    }
-
-    #intro {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      padding: 20px;
+    body {
+      font-family: Arial, sans-serif;
       text-align: center;
+      margin-top: 100px;
+    }
+    button {
+      padding: 10px 20px;
       font-size: 18px;
-      white-space: pre-wrap;
-      animation: fadeOut 1s ease 3s forwards;
-    }
-
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
-
-    #main {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .header {
-      background: #121212;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 16px;
-      border-bottom: 1px solid #333;
-    }
-
-    .header span.logo {
-      font-weight: bold;
-      color: #00ffaa;
-    }
-
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .icon {
-      font-size: 60px;
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
-      color: #00ffaa;
-    }
-
-    p {
-      font-size: 16px;
-      max-width: 600px;
-      color: #bbbbbb;
-    }
-
-    .search {
-      margin-top: 30px;
-      display: flex;
-      width: 90%;
-      max-width: 500px;
-    }
-
-    .search input {
-      flex: 1;
-      padding: 12px;
+      background-color: #4267B2;
+      color: white;
       border: none;
-      border-radius: 8px 0 0 8px;
-      background: #2d2d2d;
-      color: #fff;
-      font-size: 16px;
-    }
-
-    .search button {
-      padding: 12px 16px;
-      background: #00ffaa;
-      color: #000;
-      border: none;
-      border-radius: 0 8px 8px 0;
-      font-weight: bold;
+      border-radius: 5px;
       cursor: pointer;
     }
-
-    .search button:hover {
-      background: #00dd99;
-    }
-
-    @media (max-width: 500px) {
-      h1 { font-size: 22px; }
-      .icon { font-size: 50px; }
+    button:hover {
+      background-color: #365899;
     }
   </style>
 </head>
 <body>
 
-  <!-- Intro Animation -->
-  <div id="intro">
-    <span id="introText"></span>
-  </div>
-
-  <!-- Main Page -->
-  <div id="main">
-    <div class="header">
-      <span class="logo">PrivateTab</span>
-      <span>X</span>
-    </div>
-
-    <div class="main">
-      <div class="icon">🛡️</div>
-      <h1>Welcome to PrivateTab</h1>
-      <p>Browse safely in private mode. Your activities are not tracked and nothing is saved on this device. Stay secure, stay hidden.</p>
-
-      <form class="search" action="https://www.google.com/search" method="GET" target="_blank">
-        <input type="text" name="q" placeholder="Search or enter address..." required>
-        <button type="submit">Go</button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    const text = "Initializing...\nSecure Environment Loading...\nThis private web tab hides your activities.\nNothing is saved. Everything is encrypted.";
-    let i = 0;
-    const speed = 50;
-    function typeWriter() {
-      if (i < text.length) {
-        document.getElementById("introText").innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, speed);
-      }
-    }
-    typeWriter();
-
-    // Show main page after 3.5 seconds
-    setTimeout(() => {
-      document.getElementById("intro").style.display = "none";
-      document.getElementById("main").style.display = "flex";
-      document.body.style.overflow = "auto";
-    }, 3500);
-  </script>
+  <a href="https://xhamster1.desi/search/video+pron"><button>click me</button></a>
 
 </body>
 </html>
