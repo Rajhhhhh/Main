@@ -1,93 +1,68 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-    <title>My Stylish Browser</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#1e1e2f;
-            color:white;
-            text-align:center;
-        }
-
-        .browser-bar{
-            background:#111;
-            padding:10px;
-            display:flex;
-            align-items:center;
-        }
-
-        .dots{
-            display:flex;
-            gap:6px;
-            margin-right:15px;
-        }
-
-        .dot{
-            width:12px;
-            height:12px;
-            border-radius:50%;
-        }
-
-        .red{background:#ff5f56;}
-        .yellow{background:#ffbd2e;}
-        .green{background:#27c93f;}
-
-        .address-bar{
-            flex:1;
-            background:#2a2a3d;
-            border-radius:20px;
-            padding:6px 15px;
-            color:#ccc;
-        }
-
-        .content{
-            margin-top:120px;
-        }
-
-        .search-box{
-            width:400px;
-            max-width:90%;
-            padding:12px;
-            border-radius:25px;
-            border:none;
-            outline:none;
-        }
-
-        .search-btn{
-            margin-top:15px;
-            padding:10px 25px;
-            border:none;
-            border-radius:20px;
-            background:#4CAF50;
-            color:white;
-            cursor:pointer;
-        }
-    </style>
+  <title>Firebase Login</title>
 </head>
-
 <body>
 
-<div class="browser-bar">
-    <div class="dots">
-        <div class="dot red"></div>
-        <div class="dot yellow"></div>
-        <div class="dot green"></div>
-    </div>
-    <div class="address-bar">https://www.google.com</div>
-</div>
+<h2>Login / Signup</h2>
 
-<div class="content">
-    <h1>My Browser</h1>
+<input type="email" id="email" placeholder="Enter Email"><br><br> <input type="password" id="password" placeholder="Enter Password"><br><br>
 
-    <form action="https://www.google.com/search" method="GET">
-        <input type="text" name="q" class="search-box" placeholder="Search on Google..." required>
-        <br>
-        <button type="submit" class="search-btn">Search</button>
-    </form>
-</div>
+<button onclick="signup()">Signup</button> <button onclick="login()">Login</button>
+
+<p id="msg"></p>
+
+<!-- Firebase Scripts -->
+
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+
+<script>
+/* 🔴 STEP 1: YAHAN API CODE PASTE KARNA HAI */
+const firebaseConfig = {
+  apiKey: "AIzaSyAUAZqm-Z-pMZm8LVOB9l7tvOvSctrMWrI",
+  authDomain: "prince-wolding.firebaseapp.com",
+  projectId: "prince-wolding",
+  storageBucket: "prince-wolding.firebasestorage.app",
+  messagingSenderId: "96058652719",
+  appId: "1:96058652719:web:65b1cf24d4ed48c1cf6eda",
+  measurementId: "G-M17TCHY2XL"
+};
+
+/* Firebase start */
+firebase.initializeApp(firebaseConfig);
+
+/* Signup */
+function signup() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById("msg").innerHTML = "Signup success ✅";
+    })
+    .catch(err => {
+      document.getElementById("msg").innerHTML = err.message;
+    });
+}
+
+/* Login */
+function login() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById("msg").innerHTML = "Login success ✅";
+    })
+    .catch(err => {
+      document.getElementById("msg").innerHTML = err.message;
+    });
+}
+</script>
 
 </body>
 </html>
