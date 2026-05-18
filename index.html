@@ -1,77 +1,364 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Firebase Login</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial;
+    }
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#f2f2f2;
+    }
+
+    .container{
+      width:340px;
+      background:white;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      margin-bottom:12px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      outline:none;
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      border:none;
+      background:black;
+      color:white;
+      border-radius:6px;
+      margin-bottom:10px;
+      cursor:pointer;
+    }
+
+    .forgot{
+      text-align:right;
+      color:blue;
+      font-size:13px;
+      cursor:pointer;
+      margin-bottom:15px;
+    }
+
+    .text{
+      text-align:center;
+      margin-top:10px;
+      font-size:14px;
+    }
+
+    .text span{
+      color:blue;
+      cursor:pointer;
+    }
+
+    .signup-box{
+      display:none;
+    }
+
+  </style>
 </head>
 <body>
 
-<h2>Login / Signup</h2>
+<div class="container">
 
-<input type="email" id="email" placeholder="Enter Email"><br><br> <input type="password" id="password" placeholder="Enter Password"><br><br>
+  <!-- LOGIN -->
 
-<button onclick="signup()">Signup</button> <button onclick="login()">Login</button>
+  <div id="loginBox">
 
-<p id="msg"></p>
+    <h2>Login</h2>
 
-<!-- ✅ Firebase (correct version) -->
+    <input type="email"
+    id="loginEmail"
+    placeholder="Email">
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <input type="password"
+    id="loginPassword"
+    placeholder="Password">
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <div class="forgot"
+    id="forgotPassword">
 
-<script>
-/* ✅ Tumhara exact Firebase config */
+      Forgot Password?
+
+    </div>
+
+    <button id="loginBtn">
+      Login
+    </button>
+
+    <div class="text">
+
+      Don't have account?
+
+      <span onclick="showSignup()">
+        Signup
+      </span>
+
+    </div>
+
+  </div>
+
+
+
+
+  <!-- SIGNUP -->
+
+  <div class="signup-box"
+  id="signupBox">
+
+    <h2>Signup</h2>
+
+    <input type="email"
+    id="signupEmail"
+    placeholder="Email">
+
+    <input type="password"
+    id="signupPassword"
+    placeholder="Password">
+
+    <button id="signupBtn">
+      Create Account
+    </button>
+
+    <div class="text">
+
+      Already have account?
+
+      <span onclick="showLogin()">
+        Login
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+  getAuth,
+
+  createUserWithEmailAndPassword,
+
+  signInWithEmailAndPassword,
+
+  sendPasswordResetEmail
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+
+
+// FIREBASE CONFIG
+
 const firebaseConfig = {
+
   apiKey: "AIzaSyAUAZqm-Z-pMZm8LVOB9l7tvOvSctrMWrI",
+
   authDomain: "prince-wolding.firebaseapp.com",
+
   projectId: "prince-wolding",
+
   storageBucket: "prince-wolding.firebasestorage.app",
+
   messagingSenderId: "96058652719",
+
   appId: "1:96058652719:web:65b1cf24d4ed48c1cf6eda",
+
   measurementId: "G-M17TCHY2XL"
+
 };
 
-/* Firebase initialize */
-firebase.initializeApp(firebaseConfig);
 
-/* Signup */
-function signup() {
-  let email = document.getElementById("email").value.trim();
-  let password = document.getElementById("password").value.trim();
 
-  if(email === "" || password === "") {
-    document.getElementById("msg").innerHTML = "❗ Fill all fields";
+
+// INIT FIREBASE
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+
+
+
+// SHOW SIGNUP
+
+window.showSignup = function(){
+
+  document.getElementById("loginBox")
+  .style.display="none";
+
+  document.getElementById("signupBox")
+  .style.display="block";
+
+};
+
+
+
+
+// SHOW LOGIN
+
+window.showLogin = function(){
+
+  document.getElementById("signupBox")
+  .style.display="none";
+
+  document.getElementById("loginBox")
+  .style.display="block";
+
+};
+
+
+
+
+// SIGNUP
+
+document.getElementById("signupBtn")
+
+.addEventListener("click", ()=>{
+
+  const email =
+  document.getElementById("signupEmail").value;
+
+  const password =
+  document.getElementById("signupPassword").value;
+
+  createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  )
+
+  .then(()=>{
+
+    alert("Account Created");
+
+    window.location.href="home.html";
+
+  })
+
+  .catch((error)=>{
+
+    alert(error.message);
+
+  });
+
+});
+
+
+
+
+
+
+// LOGIN
+
+document.getElementById("loginBtn")
+
+.addEventListener("click", ()=>{
+
+  const email =
+  document.getElementById("loginEmail").value;
+
+  const password =
+  document.getElementById("loginPassword").value;
+
+  signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  )
+
+  .then(()=>{
+
+    alert("Login Success");
+
+    window.location.href="home.html";
+
+  })
+
+  .catch((error)=>{
+
+    alert(error.message);
+
+  });
+
+});
+
+
+
+
+
+
+
+// FORGOT PASSWORD
+
+document.getElementById("forgotPassword")
+
+.addEventListener("click", ()=>{
+
+  const email =
+  document.getElementById("loginEmail").value;
+
+  if(email==""){
+
+    alert("Enter Email First");
+
     return;
+
   }
 
-  if(password.length < 6) {
-    document.getElementById("msg").innerHTML = "❗ Password must be 6+ characters";
-    return;
-  }
+  sendPasswordResetEmail(auth,email)
 
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      document.getElementById("msg").innerHTML = "✅ Signup success";
-    })
-    .catch(err => {
-      document.getElementById("msg").innerHTML = "❌ " + err.message;
-    });
-}
+  .then(()=>{
 
-/* Login */
-function login() {
-  let email = document.getElementById("email").value.trim();
-  let password = document.getElementById("password").value.trim();
+    alert(
+      "Password Reset Link Sent To Your Gmail"
+    );
 
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => {
-      document.getElementById("msg").innerHTML = "✅ Login success";
-    })
-    .catch(err => {
-      document.getElementById("msg").innerHTML = "❌ " + err.message;
-    });
-}
+  })
+
+  .catch((error)=>{
+
+    alert(error.message);
+
+  });
+
+});
+
 </script>
 
 </body>
