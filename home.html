@@ -167,9 +167,14 @@
       rows="3"
       placeholder="Your Bio"></textarea>
 
+      <input type="file"
+      id="imageUpload"
+      accept="image/*">
+
       <input type="text"
       id="image"
-      placeholder="Profile Image URL">
+      placeholder="Uploaded Image URL"
+      readonly>
 
       <button class="save-btn"
       id="saveBtn">
@@ -216,6 +221,23 @@ import {
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
 // FIREBASE CONFIG
 
 const firebaseConfig = {
@@ -242,6 +264,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+const storage = getStorage(app);
 
 
 // PROFILE DROPDOWN
@@ -271,13 +297,58 @@ profileBtn.addEventListener("click",()=>{
 
 // CHECK USER
 
-onAuthStateChanged(auth,(user)=>{
+let currentUser = null;
+
+onAuthStateChanged(auth,async(user)=>{
 
   if(user){
+
+    currentUser = user;
 
     document.getElementById("welcomeText")
     .innerText =
     "Welcome " + (user.email || "User");
+
+
+    // LOAD PROFILE FROM FIRESTORE
+
+    const docRef = doc(db,"users",user.uid);
+
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()){
+
+      const data = docSnap.data();
+
+      document.getElementById("name").value =
+      data.name || "";
+
+      document.getElementById("phone").value =
+      data.phone || "";
+
+      document.getElementById("bio").value =
+      data.bio || "";
+
+      document.getElementById("image").value =
+      data.image || "";
+
+
+      if(data.image){
+
+        document.getElementById("profileImage")
+        .src = data.image;
+
+      }
+
+
+      if(data.name){
+
+        document.getElementById("welcomeText")
+        .innerText = "Welcome " + data.name;
+
+      }
+
+    }
 
   }
 
@@ -290,62 +361,39 @@ onAuthStateChanged(auth,(user)=>{
 });
 
 
-// LOAD SAVED DATA
+// IMAGE UPLOAD
 
-window.onload = ()=>{
+document.getElementById("imageUpload")
 
-  const savedName =
-  localStorage.getItem("name");
+.addEventListener("change",async(e)=>{
 
-  const savedPhone =
-  localStorage.getItem("phone");
+  const file = e.target.files[0];
 
-  const savedBio =
-  localStorage.getItem("bio");
+  if(!file)return;
 
-  const savedImage =
-  localStorage.getItem("image");
+  const imageRef = ref(
+    storage,
+    "profileImages/" + Date.now() + file.name
+  );
 
+  await uploadBytes(imageRef,file);
 
-  if(savedName){
+  const imageURL =
+  await getDownloadURL(imageRef);
 
-    document.getElementById("name").value =
-    savedName;
+  document.getElementById("image").value =
+  imageURL;
 
-  }
+  document.getElementById("profileImage")
+  .src = imageURL;
 
-  if(savedPhone){
+  alert("Image Uploaded Successfully");
 
-    document.getElementById("phone").value =
-    savedPhone;
-
-  }
-
-  if(savedBio){
-
-    document.getElementById("bio").value =
-    savedBio;
-
-  }
-
-  if(savedImage){
-
-    document.getElementById("image").value =
-    savedImage;
-
-    document.getElementById("profileImage")
-    .src = savedImage;
-
-  }
-
-};
-
-
-// SAVE DETAILS
+});
 
 document.getElementById("saveBtn")
 
-.addEventListener("click",()=>{
+.addEventListener("click",async()=>{
 
   const name =
   document.getElementById("name").value;
@@ -360,10 +408,15 @@ document.getElementById("saveBtn")
   document.getElementById("image").value;
 
 
-  localStorage.setItem("name",name);
-  localStorage.setItem("phone",phone);
-  localStorage.setItem("bio",bio);
-  localStorage.setItem("image",image);
+  await setDoc(doc(db,"users",currentUser.uid),{
+
+    name:name,
+    phone:phone,
+    bio:bio,
+    image:image,
+    email:currentUser.email
+
+  });
 
 
   if(image!=""){
@@ -380,7 +433,7 @@ document.getElementById("saveBtn")
 
   }
 
-  alert("Profile Saved");
+  alert("Profile Saved Permanently");
 
 });
 
