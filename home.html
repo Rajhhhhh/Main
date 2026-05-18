@@ -1,83 +1,219 @@
+# File Name → `home.html`
+
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
 
   <style>
 
-    body{
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
       font-family:Arial;
-      background:#f2f2f2;
     }
 
-    .box{
-      width:350px;
+    body{
+      background:#f3f3f3;
+    }
+
+    .navbar{
+      width:100%;
       background:white;
-      padding:30px;
-      margin:80px auto;
+      padding:15px 25px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 2px 10px rgba(0,0,0,0.08);
+      position:fixed;
+      top:0;
+      left:0;
+    }
+
+    .logo{
+      font-size:22px;
+      font-weight:bold;
+    }
+
+    .profile-area{
+      position:relative;
+    }
+
+    .profile-btn{
+      width:45px;
+      height:45px;
+      border-radius:50%;
+      border:none;
+      overflow:hidden;
+      cursor:pointer;
+      background:#ddd;
+    }
+
+    .profile-btn img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .dropdown{
+      width:300px;
+      background:white;
+      position:absolute;
+      right:0;
+      top:60px;
+      padding:20px;
       border-radius:10px;
-      text-align:center;
       box-shadow:0 2px 10px rgba(0,0,0,0.1);
+      display:none;
     }
 
-    h2{
+    .dropdown h3{
       margin-bottom:15px;
+      text-align:center;
     }
 
-    p{
-      color:#555;
+    .dropdown input,
+    .dropdown textarea{
+      width:100%;
+      padding:10px;
+      margin-bottom:12px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      outline:none;
+      resize:none;
+    }
+
+    .dropdown button{
+      width:100%;
+      padding:11px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
       margin-bottom:10px;
     }
 
-    button{
-      padding:12px 20px;
-      border:none;
+    .save-btn{
       background:black;
       color:white;
-      border-radius:6px;
-      cursor:pointer;
-      margin-top:20px;
+    }
+
+    .logout-btn{
+      background:#e53935;
+      color:white;
+    }
+
+    .main{
+      width:100%;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+    }
+
+    .main h1{
+      font-size:38px;
+      margin-bottom:10px;
+    }
+
+    .main p{
+      color:#666;
     }
 
   </style>
 </head>
 <body>
 
-<div class="box">
 
-  <h2>User Profile</h2>
+<!-- NAVBAR -->
 
-  <p id="userEmail">
-    Loading...
-  </p>
+<div class="navbar">
 
-  <button id="logoutBtn">
-    Logout
-  </button>
+  <div class="logo">
+    My Website
+  </div>
+
+
+  <div class="profile-area">
+
+    <button class="profile-btn" id="profileBtn">
+
+      <img id="profileImage"
+      src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+
+    </button>
+
+
+    <!-- DROPDOWN -->
+
+    <div class="dropdown" id="dropdownMenu">
+
+      <h3>User Profile</h3>
+
+      <input type="text"
+      id="name"
+      placeholder="Your Name">
+
+      <input type="text"
+      id="phone"
+      placeholder="Phone Number">
+
+      <textarea
+      id="bio"
+      rows="3"
+      placeholder="Your Bio"></textarea>
+
+      <input type="text"
+      id="image"
+      placeholder="Profile Image URL">
+
+      <button class="save-btn"
+      id="saveBtn">
+        Save Details
+      </button>
+
+      <button class="logout-btn"
+      id="logoutBtn">
+        Logout
+      </button>
+
+    </div>
+
+  </div>
 
 </div>
 
+
+<!-- MAIN PAGE -->
+
+<div class="main">
+
+  <h1 id="welcomeText">
+    Welcome User
+  </h1>
+
+  <p>
+    Your website homepage is ready.
+  </p>
+
+</div>
 
 
 <script type="module">
 
 import { initializeApp }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-
   getAuth,
-
   onAuthStateChanged,
-
   signOut
-
 }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
 
 
 // FIREBASE CONFIG
@@ -101,15 +237,36 @@ const firebaseConfig = {
 };
 
 
-
-
-// INIT
+// INIT FIREBASE
 
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
 
+// PROFILE DROPDOWN
+
+const profileBtn =
+document.getElementById("profileBtn");
+
+const dropdownMenu =
+document.getElementById("dropdownMenu");
+
+profileBtn.addEventListener("click",()=>{
+
+  if(dropdownMenu.style.display==="block"){
+
+    dropdownMenu.style.display="none";
+
+  }
+
+  else{
+
+    dropdownMenu.style.display="block";
+
+  }
+
+});
 
 
 // CHECK USER
@@ -118,8 +275,9 @@ onAuthStateChanged(auth,(user)=>{
 
   if(user){
 
-    document.getElementById("userEmail")
-    .innerText = user.email;
+    document.getElementById("welcomeText")
+    .innerText =
+    "Welcome " + (user.email || "User");
 
   }
 
@@ -132,13 +290,106 @@ onAuthStateChanged(auth,(user)=>{
 });
 
 
+// LOAD SAVED DATA
+
+window.onload = ()=>{
+
+  const savedName =
+  localStorage.getItem("name");
+
+  const savedPhone =
+  localStorage.getItem("phone");
+
+  const savedBio =
+  localStorage.getItem("bio");
+
+  const savedImage =
+  localStorage.getItem("image");
+
+
+  if(savedName){
+
+    document.getElementById("name").value =
+    savedName;
+
+  }
+
+  if(savedPhone){
+
+    document.getElementById("phone").value =
+    savedPhone;
+
+  }
+
+  if(savedBio){
+
+    document.getElementById("bio").value =
+    savedBio;
+
+  }
+
+  if(savedImage){
+
+    document.getElementById("image").value =
+    savedImage;
+
+    document.getElementById("profileImage")
+    .src = savedImage;
+
+  }
+
+};
+
+
+// SAVE DETAILS
+
+document.getElementById("saveBtn")
+
+.addEventListener("click",()=>{
+
+  const name =
+  document.getElementById("name").value;
+
+  const phone =
+  document.getElementById("phone").value;
+
+  const bio =
+  document.getElementById("bio").value;
+
+  const image =
+  document.getElementById("image").value;
+
+
+  localStorage.setItem("name",name);
+  localStorage.setItem("phone",phone);
+  localStorage.setItem("bio",bio);
+  localStorage.setItem("image",image);
+
+
+  if(image!=""){
+
+    document.getElementById("profileImage")
+    .src = image;
+
+  }
+
+  if(name!=""){
+
+    document.getElementById("welcomeText")
+    .innerText = "Welcome " + name;
+
+  }
+
+  alert("Profile Saved");
+
+});
 
 
 // LOGOUT
 
 document.getElementById("logoutBtn")
 
-.addEventListener("click", ()=>{
+.addEventListener("click",()=>{
 
   signOut(auth)
 
