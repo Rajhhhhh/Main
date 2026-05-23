@@ -1,356 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login</title>
-
-  <style>
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial;
-    }
-
-    body{
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      background:#f3f3f3;
-    }
-
-    .container{
-      width:340px;
-      background:white;
-      padding:30px;
-      border-radius:10px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    h2{
-      text-align:center;
-      margin-bottom:20px;
-    }
-
-    input{
-      width:100%;
-      padding:12px;
-      margin-bottom:12px;
-      border:1px solid #ccc;
-      border-radius:6px;
-    }
-
-    button{
-      width:100%;
-      padding:12px;
-      border:none;
-      background:black;
-      color:white;
-      border-radius:6px;
-      margin-bottom:10px;
-      cursor:pointer;
-    }
-
-    .text{
-      text-align:center;
-      font-size:14px;
-      margin-top:10px;
-    }
-
-    .text span{
-      color:blue;
-      cursor:pointer;
-    }
-
-    .forgot{
-      text-align:right;
-      color:blue;
-      font-size:13px;
-      cursor:pointer;
-      margin-bottom:15px;
-    }
-
-    .signup-box{
-      display:none;
-    }
-
-  </style>
+    <title>Page 1 - Upload Image</title>
 </head>
 <body>
 
-<div class="container">
+    <h1>Upload Image to Firebase</h1>
 
-  <!-- LOGIN -->
+    <input type="file" id="imageFile">
+    <button onclick="uploadImage()">Upload</button>
 
-  <div id="loginBox">
+    <p id="status"></p>
 
-    <h2>Login</h2>
+    <!-- Firebase -->
+    <script type="module">
 
-    <input type="email" id="loginEmail" placeholder="Email">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-    <input type="password" id="loginPassword" placeholder="Password">
+        import {
+            getStorage,
+            ref,
+            uploadBytesResumable
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-    <div class="forgot" id="forgotPassword">
-      Forgot Password?
-    </div>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCK441SC8B07BXhQENZW41C2mRRmvzEU0",
+            authDomain: "first-test-e0d11.firebaseapp.com",
+            projectId: "first-test-e0d11",
+            storageBucket: "first-test-e0d11.firebasestorage.app",
+            messagingSenderId: "10063949234",
+            appId: "1:10063949234:web:97e0181722a48deb95c8ab",
+            measurementId: "G-6R5W00HHPK"
+        };
 
-    <button id="loginBtn">Login</button>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
 
-    <button id="githubBtn">
-      Login with GitHub
-    </button>
+        // Storage
+        const storage = getStorage(app);
 
-    <div class="text">
-      Don't have account?
-      <span onclick="showSignup()">Signup</span>
-    </div>
+        // Upload Function
+        window.uploadImage = function () {
 
-  </div>
+            const file = document.getElementById("imageFile").files[0];
 
+            if (!file) {
+                alert("Please select image");
+                return;
+            }
 
+            document.getElementById("status").innerText =
+                "Uploading...";
 
-  <!-- SIGNUP -->
+            const storageRef = ref(storage, "images/" + file.name);
 
-  <div class="signup-box" id="signupBox">
+            const uploadTask = uploadBytesResumable(storageRef, file);
 
-    <h2>Signup</h2>
+            uploadTask.on(
 
-    <input type="email" id="signupEmail" placeholder="Email">
+                "state_changed",
 
-    <input type="password" id="signupPassword" placeholder="Password">
+                (snapshot) => {
 
-    <button id="signupBtn">
-      Create Account
-    </button>
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-    <div class="text">
-      Already have account?
-      <span onclick="showLogin()">Login</span>
-    </div>
+                    document.getElementById("status").innerText =
+                        "Uploading: " + Math.round(progress) + "%";
 
-  </div>
+                },
 
-</div>
+                (error) => {
 
+                    document.getElementById("status").innerText =
+                        "Error: " + error.message;
 
+                },
 
-<script type="module">
+                () => {
 
-import { initializeApp }
+                    document.getElementById("status").innerText =
+                        "Done Upload";
 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+                    setTimeout(() => {
 
-import {
+                        location.reload();
 
-  getAuth,
+                    }, 2000);
 
-  createUserWithEmailAndPassword,
+                }
 
-  signInWithEmailAndPassword,
+            );
 
-  GithubAuthProvider,
+        };
 
-  signInWithPopup,
-
-  sendPasswordResetEmail
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-
-// FIREBASE CONFIG
-
-const firebaseConfig = {
-
-  apiKey: "AIzaSyAUAZqm-Z-pMZm8LVOB9l7tvOvSctrMWrI",
-
-  authDomain: "prince-wolding.firebaseapp.com",
-
-  projectId: "prince-wolding",
-
-  storageBucket: "prince-wolding.firebasestorage.app",
-
-  messagingSenderId: "96058652719",
-
-  appId: "1:96058652719:web:65b1cf24d4ed48c1cf6eda",
-
-  measurementId: "G-M17TCHY2XL"
-
-};
-
-
-
-// INIT FIREBASE
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-
-
-
-// SHOW SIGNUP
-
-window.showSignup = function(){
-
-  document.getElementById("loginBox").style.display="none";
-
-  document.getElementById("signupBox").style.display="block";
-
-}
-
-
-
-// SHOW LOGIN
-
-window.showLogin = function(){
-
-  document.getElementById("signupBox").style.display="none";
-
-  document.getElementById("loginBox").style.display="block";
-
-}
-
-
-
-
-// SIGNUP
-
-document.getElementById("signupBtn")
-
-.addEventListener("click", ()=>{
-
-  const email =
-  document.getElementById("signupEmail").value;
-
-  const password =
-  document.getElementById("signupPassword").value;
-
-  createUserWithEmailAndPassword(auth,email,password)
-
-  .then(()=>{
-
-    alert("Account Created");
-
-  })
-
-  .catch((error)=>{
-
-    alert(error.message);
-
-  });
-
-});
-
-
-
-
-
-// LOGIN
-
-document.getElementById("loginBtn")
-
-.addEventListener("click", ()=>{
-
-  const email =
-  document.getElementById("loginEmail").value;
-
-  const password =
-  document.getElementById("loginPassword").value;
-
-  signInWithEmailAndPassword(auth,email,password)
-
-  .then(()=>{
-
-    alert("Login Success");
-
-    window.location.href = "page2.html";
-
-  })
-
-  .catch((error)=>{
-
-    alert(error.message);
-
-  });
-
-});
-
-
-
-
-
-
-// GITHUB LOGIN
-
-const provider = new GithubAuthProvider();
-
-document.getElementById("githubBtn")
-
-.addEventListener("click", ()=>{
-
-  signInWithPopup(auth,provider)
-
-  .then(()=>{
-
-    alert("GitHub Login Success");
-
-    window.location.href = "page2.html";
-
-  })
-
-  .catch((error)=>{
-
-    alert(error.message);
-
-  });
-
-});
-
-
-
-
-
-
-// FORGOT PASSWORD
-
-document.getElementById("forgotPassword")
-
-.addEventListener("click", ()=>{
-
-  const email =
-  document.getElementById("loginEmail").value;
-
-  if(email==""){
-
-    alert("Enter Email First");
-
-    return;
-
-  }
-
-  sendPasswordResetEmail(auth,email)
-
-  .then(()=>{
-
-    alert("Password Reset Email Sent");
-
-  })
-
-  .catch((error)=>{
-
-    alert(error.message);
-
-  });
-
-});
-
-</script>
+    </script>
 
 </body>
 </html>
