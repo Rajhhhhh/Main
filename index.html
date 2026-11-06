@@ -45,10 +45,7 @@ input,textarea{
  margin:5px 0;
 }
 
-textarea{
- min-height:130px;
- resize:vertical;
-}
+textarea{min-height:130px;resize:vertical}
 
 .page{
  min-height:100vh;
@@ -61,7 +58,7 @@ textarea{
 .page.active{display:block}
 
 .container{
- max-width:700px;
+ max-width:750px;
  margin:auto;
  background:white;
  padding:18px;
@@ -79,30 +76,22 @@ h3{color:#174477}
  margin-bottom:18px;
 }
 
-.header h2{
- flex:1;
- margin:0;
-}
+.header h2{flex:1;margin:0}
 
 .home-btn{
  width:auto;
  min-width:85px;
- padding:10px 15px;
+ padding:10px;
  margin:0;
  background:#555;
 }
 
 .home-title{
  text-align:center;
- margin:45px 0 30px;
+ margin:40px 0 30px;
 }
 
-.home-title h1{
- color:#174477;
- font-size:28px;
-}
-
-.home-title p{color:#777}
+.home-title h1{color:#174477}
 
 .dashboard{
  display:grid;
@@ -111,7 +100,7 @@ h3{color:#174477}
 }
 
 .menu-box{
- min-height:180px;
+ min-height:170px;
  border-radius:14px;
  display:flex;
  flex-direction:column;
@@ -121,39 +110,16 @@ h3{color:#174477}
  cursor:pointer;
  text-align:center;
  padding:15px;
- box-shadow:0 4px 12px #0002;
- transition:.2s;
 }
 
 .menu-box:active{transform:scale(.97)}
-
-.menu-box .symbol{
- font-size:45px;
- margin-bottom:12px;
-}
-
-.menu-box h3{
- color:white;
- margin:5px 0;
-}
-
-.menu-box p{
- font-size:12px;
- margin:5px 0;
- color:white;
-}
+.menu-box .symbol{font-size:42px}
+.menu-box h3{color:white;margin:8px 0}
+.menu-box p{font-size:12px;margin:5px 0}
 
 .menu1{background:#1769aa}
 .menu2{background:#16864a}
 .menu3{background:#dc8819}
-
-.status{
- color:#1769aa;
- font-size:13px;
- text-align:center;
- min-height:20px;
- margin:10px 0;
-}
 
 .camera-frame{
  width:100%;
@@ -168,7 +134,6 @@ video{
  width:100%;
  height:100%;
  object-fit:cover;
- display:block;
 }
 
 canvas{
@@ -182,6 +147,23 @@ canvas{
 }
 
 .section{margin-top:20px}
+
+.status{
+ color:#1769aa;
+ font-size:13px;
+ text-align:center;
+ min-height:20px;
+ margin:10px 0;
+}
+
+.small{font-size:12px;color:#666}
+
+.master-count{
+ background:#e8f2ff;
+ padding:10px;
+ border-radius:6px;
+ margin:10px 0;
+}
 
 .record{
  padding:12px;
@@ -222,14 +204,31 @@ canvas{
 .tag-duplicate{background:#d93636;color:white}
 .tag-new{background:#16864a;color:white}
 
-.master-count{
+.file-label{
+ display:block;
+ padding:15px;
+ text-align:center;
  background:#e8f2ff;
- padding:10px;
- border-radius:6px;
- margin:10px 0;
+ color:#1769aa;
+ border:2px dashed #1769aa;
+ border-radius:8px;
+ cursor:pointer;
+ margin:12px 0;
 }
 
-.small{font-size:12px;color:#666}
+#imageFile{display:none}
+
+.image-preview{
+ max-width:100%;
+ max-height:450px;
+ object-fit:contain;
+ display:block;
+ margin:12px auto;
+ border:1px solid #ddd;
+ border-radius:6px;
+}
+
+.hidden{display:none!important}
 
 #popup{
  position:fixed;
@@ -253,99 +252,64 @@ canvas{
 
 .popup-box h3{color:#d93636}
 
-.hidden{display:none!important}
-
-.image-preview{
- max-width:100%;
- max-height:350px;
- object-fit:contain;
- display:block;
- margin:10px auto;
- border:1px solid #ddd;
- border-radius:6px;
-}
-
-.file-label{
- display:block;
- padding:14px;
- text-align:center;
- background:#e8f2ff;
- color:#1769aa;
- border:2px dashed #1769aa;
- border-radius:8px;
- cursor:pointer;
- margin:12px 0;
-}
-
-#imageFile{display:none}
-
 @media(max-width:450px){
  .dashboard{grid-template-columns:1fr}
- .menu-box{min-height:145px}
- .home-title{margin:25px 0}
+ .menu-box{min-height:140px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- HOME PAGE -->
+<!-- HOME -->
 
 <div id="homePage" class="page active">
-
 <div class="container">
 
 <div class="home-title">
- <h1>SMART LINE SCANNER</h1>
- <p>Select your required option</p>
+<h1>SMART LINE SCANNER</h1>
+<p>Select your required option</p>
 </div>
 
 <div class="dashboard">
 
 <div class="menu-box menu1" onclick="openPage('dataPage')">
- <div class="symbol">🗄️</div>
- <h3>1. DATA SAVE</h3>
- <p>Save Master Data</p>
+<div class="symbol">🗄️</div>
+<h3>1. DATA SAVE</h3>
+<p>Save Master Data</p>
 </div>
 
 <div class="menu-box menu2" onclick="openPage('scanPage')">
- <div class="symbol">📷</div>
- <h3>2. SCAN PAGE</h3>
- <p>Camera Scan & Duplicate Check</p>
+<div class="symbol">📷</div>
+<h3>2. SCAN PAGE</h3>
+<p>Camera Scan & Duplicate Check</p>
 </div>
 
 <div class="menu-box menu3" onclick="openPage('imagePage')">
- <div class="symbol">🖼️</div>
- <h3>3. FULL IMAGE SCAN</h3>
- <p>Image to Text Conversion</p>
-</div>
-
+<div class="symbol">🖼️</div>
+<h3>3. FULL IMAGE SCAN</h3>
+<p>Full Page Image to Text</p>
 </div>
 
 </div>
 </div>
+</div>
 
 
-<!-- PAGE 1: DATA SAVE -->
+<!-- DATA SAVE PAGE -->
 
 <div id="dataPage" class="page">
-
 <div class="container">
 
 <div class="header">
- <button class="home-btn" onclick="goHome()">← HOME</button>
- <h2>DATA SAVE</h2>
+<button class="home-btn" onclick="goHome()">← HOME</button>
+<h2>DATA SAVE</h2>
 </div>
 
 <h3>Master Data</h3>
 
-<p class="small">
-Pehle se available data yahan save karein.
-Har line ko ek alag record maana jayega.
-</p>
-
 <textarea id="masterData"
-placeholder="Example:&#10;9876543210&#10;9876543211&#10;9876543212"></textarea>
+placeholder="ABCDabcd123456"></textarea>
 
 <button class="green" onclick="saveMasterData()">
 SAVE MASTER DATA
@@ -359,25 +323,19 @@ Master Records: 0
 
 <h3>Google Sheet Import</h3>
 
-<input id="sheetUrl" placeholder="Google Sheet URL paste karein">
+<input id="sheetUrl" placeholder="Google Sheet URL">
 
-<button class="blue" onclick="copySheetLink()">
-COPY SHEET LINK
-</button>
+<button class="blue" onclick="copySheetLink()">COPY SHEET LINK</button>
 
 <button class="orange" onclick="loadGoogleSheet()">
 LOAD GOOGLE SHEET DATA
 </button>
 
-<p class="small">
-Google Sheet public ya published honi chahiye.
-Data import hone ke baad Master Data replace ho jayega.
-</p>
+<p class="small">Sheet public/published honi chahiye.</p>
 
 <hr>
 
 <h3>Saved Master Data</h3>
-
 <div id="masterList"></div>
 
 <button class="red" onclick="clearMasterData()">
@@ -388,61 +346,37 @@ CLEAR MASTER DATA
 </div>
 
 
-<!-- PAGE 2: CAMERA SCAN -->
+<!-- CAMERA SCAN PAGE -->
 
 <div id="scanPage" class="page">
-
 <div class="container">
 
 <div class="header">
- <button class="home-btn" onclick="goHome()">← HOME</button>
- <h2>CAMERA SCAN</h2>
+<button class="home-btn" onclick="goHome()">← HOME</button>
+<h2>CAMERA SCAN</h2>
 </div>
 
 <h3>Live Camera</h3>
 
 <div class="camera-frame">
- <video id="video" autoplay playsinline muted></video>
+<video id="video" autoplay playsinline muted></video>
 </div>
 
-<p class="small" style="text-align:center">
-Place required text inside the green frame.
-</p>
+<button class="blue" onclick="startCamera()">START CAMERA</button>
+<button class="green" onclick="captureFrame()">CAPTURE IMAGE</button>
+<button class="red" onclick="stopCamera()">STOP CAMERA</button>
 
-<button class="blue" onclick="startCamera()">
-START CAMERA
-</button>
-
-<button class="green" onclick="captureFrame()">
-CAPTURE IMAGE
-</button>
-
-<button class="red" onclick="stopCamera()">
-STOP CAMERA
-</button>
-
-<p class="status" id="cameraStatus">
-Camera permission required.
-</p>
+<p class="status" id="cameraStatus">Camera permission required.</p>
 
 <div id="cropSection" class="section hidden">
 
 <h3>Captured Image</h3>
-
-<p class="small">
-Finger se image par crop area select karein.
-Crop optional hai.
-</p>
+<p class="small">Finger se crop area select karein.</p>
 
 <canvas id="cameraCanvas"></canvas>
 
-<button class="orange" onclick="useCrop()">
-USE SELECTED CROP
-</button>
-
-<button class="gray" onclick="useFullCameraImage()">
-USE FULL FRAME
-</button>
+<button class="orange" onclick="useCrop()">USE SELECTED CROP</button>
+<button class="gray" onclick="useFullCameraImage()">USE FULL FRAME</button>
 
 </div>
 
@@ -450,12 +384,9 @@ USE FULL FRAME
 
 <h3>Scanned Text</h3>
 
-<textarea id="scanText"
-placeholder="Scanned text yahan aayega..."></textarea>
+<textarea id="scanText"></textarea>
 
-<button class="green" onclick="saveScannedData()">
-SUBMIT / SAVE
-</button>
+<button class="green" onclick="saveScannedData()">SUBMIT / SAVE</button>
 
 </div>
 
@@ -465,9 +396,7 @@ SUBMIT / SAVE
 
 <div id="scanTotal">Total Records: 0</div>
 
-<button class="blue" onclick="downloadExcel()">
-DOWNLOAD EXCEL
-</button>
+<button class="blue" onclick="downloadExcel()">DOWNLOAD EXCEL</button>
 
 <div id="records"></div>
 
@@ -475,31 +404,42 @@ DOWNLOAD EXCEL
 </div>
 
 
-<!-- PAGE 3: FULL IMAGE SCAN -->
+<!-- FULL IMAGE SCAN PAGE -->
 
 <div id="imagePage" class="page">
-
 <div class="container">
 
 <div class="header">
- <button class="home-btn" onclick="goHome()">← HOME</button>
- <h2>FULL IMAGE SCAN</h2>
+<button class="home-btn" onclick="goHome()">← HOME</button>
+<h2>FULL IMAGE SCAN</h2>
 </div>
 
-<h3>Select Full Image</h3>
+<h3>Upload Full Page Image</h3>
 
 <p class="small">
-Gallery se image select karein. Poore image ka text OCR se nikala jayega.
+Poora page upload karein. Scanner image ke andar jitna text padh sakta hai, sab nikalne ki koshish karega.
 </p>
 
 <label class="file-label" for="imageFile">
-📁 SELECT IMAGE FROM GALLERY
+📁 SELECT FULL PAGE IMAGE
 </label>
 
 <input type="file" id="imageFile" accept="image/*"
 onchange="loadFullImage(event)">
 
 <img id="fullImagePreview" class="image-preview hidden">
+
+<hr>
+
+<h3>Image Processing</h3>
+
+<p class="small">
+High resolution aur image enhancement se OCR ko chhote letters aur numbers padhne mein madad milegi.
+</p>
+
+<button class="blue" onclick="prepareImage()">
+PREPARE HIGH QUALITY IMAGE
+</button>
 
 <button class="green" onclick="scanFullImage()">
 SCAN FULL IMAGE
@@ -514,15 +454,11 @@ Select an image to start.
 <h3>Converted Text</h3>
 
 <textarea id="fullImageText"
-placeholder="Full image ka text yahan aayega..."></textarea>
+placeholder="Full page ka sara scanned text yahan aayega..."></textarea>
 
-<button class="blue" onclick="copyFullText()">
-COPY TEXT
-</button>
+<button class="blue" onclick="copyFullText()">COPY TEXT</button>
 
-<button class="orange" onclick="downloadText()">
-DOWNLOAD TEXT FILE
-</button>
+<button class="orange" onclick="downloadText()">DOWNLOAD TXT</button>
 
 <button class="green" onclick="saveImageText()">
 SAVE IN SCAN RECORDS
@@ -535,20 +471,17 @@ SAVE IN SCAN RECORDS
 <!-- DUPLICATE POPUP -->
 
 <div id="popup" class="hidden">
-
 <div class="popup-box">
 
 <h3>⚠ DUPLICATE DATA FOUND!</h3>
 
-<p id="popupMessage">Duplicate found.</p>
+<p id="popupMessage"></p>
 
 <div id="popupDuplicates"
 style="background:#ffe1e1;padding:10px;border-radius:6px;font-weight:bold;overflow-wrap:anywhere">
 </div>
 
-<button class="blue" onclick="closePopup()">
-OK
-</button>
+<button class="blue" onclick="closePopup()">OK</button>
 
 </div>
 </div>
@@ -556,7 +489,7 @@ OK
 
 <script>
 
-// PAGE NAVIGATION
+// NAVIGATION
 
 function openPage(id){
 
@@ -573,32 +506,19 @@ function openPage(id){
 function goHome(){
 
  stopCamera();
-
  openPage("homePage");
 
 }
 
 
-// LOCAL STORAGE
+// STORAGE
 
-let masterData=JSON.parse(
- localStorage.getItem("masterData")||"[]"
-);
+let masterData=JSON.parse(localStorage.getItem("masterData")||"[]");
 
-let records=JSON.parse(
- localStorage.getItem("scannerData")||"[]"
-);
-
-
-// NORMALIZE
+let records=JSON.parse(localStorage.getItem("scannerData")||"[]");
 
 function normalize(value){
-
- return String(value)
- .toUpperCase()
- .replace(/[^A-Z0-9]/g,"")
- .trim();
-
+ return String(value).toUpperCase().replace(/[^A-Z0-9]/g,"").trim();
 }
 
 
@@ -671,10 +591,7 @@ async function copySheetLink(){
 
  const url=document.getElementById("sheetUrl").value.trim();
 
- if(!url){
-  alert("Pehle Sheet URL enter karein.");
-  return;
- }
+ if(!url){alert("Enter Sheet URL.");return;}
 
  try{
   await navigator.clipboard.writeText(url);
@@ -691,13 +608,11 @@ function getCSVUrl(url){
 
  if(!match)return url;
 
- const id=match[1];
-
  const gidMatch=url.match(/[?&#]gid=([0-9]+)/);
  const gid=gidMatch?gidMatch[1]:"0";
 
  return "https://docs.google.com/spreadsheets/d/"+
- id+"/export?format=csv&gid="+gid;
+ match[1]+"/export?format=csv&gid="+gid;
 
 }
 
@@ -705,19 +620,15 @@ async function loadGoogleSheet(){
 
  const url=document.getElementById("sheetUrl").value.trim();
 
- if(!url){
-  alert("Google Sheet URL enter karein.");
-  return;
- }
+ if(!url){alert("Enter Google Sheet URL.");return;}
 
  try{
 
-  document.getElementById("masterCount").innerText=
-  "Loading Google Sheet...";
+  document.getElementById("masterCount").innerText="Loading...";
 
   const response=await fetch(getCSVUrl(url));
 
-  if(!response.ok)throw new Error("Sheet access nahi mila.");
+  if(!response.ok)throw new Error("Sheet access failed.");
 
   const csv=await response.text();
 
@@ -737,18 +648,17 @@ async function loadGoogleSheet(){
 
   localStorage.setItem("masterData",JSON.stringify(masterData));
 
-  document.getElementById("masterData").value=
-  masterData.join("\n");
+  document.getElementById("masterData").value=masterData.join("\n");
 
   updateMasterCount();
 
-  alert("Google Sheet Data Loaded!\nTotal: "+masterData.length);
+  alert("Google Sheet loaded: "+masterData.length);
 
  }catch(error){
 
   updateMasterCount();
 
-  alert("Sheet load nahi hui. Check karein ki sheet public/published hai.\n"+error.message);
+  alert("Sheet load failed: "+error.message);
 
  }
 
@@ -758,9 +668,7 @@ async function loadGoogleSheet(){
 // CAMERA
 
 const video=document.getElementById("video");
-
 const cameraCanvas=document.getElementById("cameraCanvas");
-
 const cameraCtx=cameraCanvas.getContext("2d");
 
 let stream=null;
@@ -770,36 +678,27 @@ let drawing=false;
 let originalImage=new Image();
 let originalReady=false;
 
-
 async function startCamera(){
 
  try{
 
-  if(!navigator.mediaDevices ||
-     !navigator.mediaDevices.getUserMedia){
-
+  if(!navigator.mediaDevices?.getUserMedia){
    throw new Error("HTTPS connection required");
-
   }
 
   stream=await navigator.mediaDevices.getUserMedia({
-
    video:{
     facingMode:{ideal:"environment"},
     width:{ideal:1920},
     height:{ideal:1080}
    },
-
    audio:false
-
   });
 
   video.srcObject=stream;
-
   await video.play();
 
-  document.getElementById("cameraStatus").innerText=
-  "Camera ready.";
+  document.getElementById("cameraStatus").innerText="Camera ready.";
 
  }catch(error){
 
@@ -809,7 +708,6 @@ async function startCamera(){
 
 }
 
-
 function stopCamera(){
 
  if(stream){
@@ -817,25 +715,19 @@ function stopCamera(){
   stream.getTracks().forEach(track=>track.stop());
 
   stream=null;
-
   video.srcObject=null;
 
  }
 
- document.getElementById("cameraStatus").innerText=
- "Camera stopped.";
+ document.getElementById("cameraStatus").innerText="Camera stopped.";
 
 }
-
 
 function captureFrame(){
 
  if(!stream || !video.videoWidth){
-
   alert("Camera start karein.");
-
   return;
-
  }
 
  const vw=video.videoWidth;
@@ -849,34 +741,24 @@ function captureFrame(){
  let sx=0,sy=0,sw=vw,sh=vh;
 
  if(videoRatio>frameRatio){
-
   sw=vh*frameRatio;
   sx=(vw-sw)/2;
-
  }else{
-
   sh=vw/frameRatio;
   sy=(vh-sh)/2;
-
  }
 
  cameraCanvas.width=Math.round(sw);
  cameraCanvas.height=Math.round(sh);
 
- cameraCtx.drawImage(
-  video,sx,sy,sw,sh,
-  0,0,cameraCanvas.width,cameraCanvas.height
- );
+ cameraCtx.drawImage(video,sx,sy,sw,sh,0,0,cameraCanvas.width,cameraCanvas.height);
 
  originalImage=new Image();
-
  originalReady=false;
 
  originalImage.onload=()=>{
-
   originalReady=true;
   drawSelection();
-
  };
 
  originalImage.src=cameraCanvas.toDataURL("image/png");
@@ -885,24 +767,20 @@ function captureFrame(){
  selection=null;
 
  document.getElementById("cropSection").classList.remove("hidden");
-
  document.getElementById("scanResult").classList.add("hidden");
 
- document.getElementById("cameraStatus").innerText=
- "Image captured. Crop optional.";
+ document.getElementById("cameraStatus").innerText="Image captured.";
 
 }
 
 
-// CROP SELECTION
+// CROP
 
 function drawSelection(){
 
  if(!originalReady)return;
 
- cameraCtx.clearRect(
-  0,0,cameraCanvas.width,cameraCanvas.height
- );
+ cameraCtx.clearRect(0,0,cameraCanvas.width,cameraCanvas.height);
 
  cameraCtx.drawImage(originalImage,0,0);
 
@@ -914,11 +792,8 @@ function drawSelection(){
  const w=Math.abs(selection.x2-selection.x1);
  const h=Math.abs(selection.y2-selection.y1);
 
- cameraCtx.fillStyle="rgba(0,0,0,0.45)";
-
- cameraCtx.fillRect(
-  0,0,cameraCanvas.width,cameraCanvas.height
- );
+ cameraCtx.fillStyle="rgba(0,0,0,.45)";
+ cameraCtx.fillRect(0,0,cameraCanvas.width,cameraCanvas.height);
 
  cameraCtx.clearRect(x,y,w,h);
 
@@ -926,48 +801,36 @@ function drawSelection(){
 
  cameraCtx.strokeStyle="#00ee66";
  cameraCtx.lineWidth=3;
-
  cameraCtx.strokeRect(x,y,w,h);
 
 }
-
 
 function getPos(e){
 
  const rect=cameraCanvas.getBoundingClientRect();
 
  return{
-
   x:(e.clientX-rect.left)*cameraCanvas.width/rect.width,
-
   y:(e.clientY-rect.top)*cameraCanvas.height/rect.height
-
  };
 
 }
-
 
 cameraCanvas.addEventListener("pointerdown",e=>{
 
  if(!captured || !originalReady)return;
 
  e.preventDefault();
-
  cameraCanvas.setPointerCapture(e.pointerId);
 
  const p=getPos(e);
 
- selection={
-  x1:p.x,y1:p.y,
-  x2:p.x,y2:p.y
- };
+ selection={x1:p.x,y1:p.y,x2:p.x,y2:p.y};
 
  drawing=true;
-
  drawSelection();
 
 });
-
 
 cameraCanvas.addEventListener("pointermove",e=>{
 
@@ -982,7 +845,6 @@ cameraCanvas.addEventListener("pointermove",e=>{
 
 });
 
-
 function finishCrop(e){
 
  if(!drawing)return;
@@ -993,16 +855,12 @@ function finishCrop(e){
  selection.y2=p.y;
 
  drawing=false;
-
  drawSelection();
 
 }
 
 cameraCanvas.addEventListener("pointerup",finishCrop);
-
-cameraCanvas.addEventListener("pointercancel",()=>{
- drawing=false;
-});
+cameraCanvas.addEventListener("pointercancel",()=>drawing=false);
 
 
 // CAMERA OCR
@@ -1010,11 +868,8 @@ cameraCanvas.addEventListener("pointercancel",()=>{
 async function useCrop(){
 
  if(!selection || !originalReady){
-
-  alert("Pehle area select karein.");
-
+  alert("Select crop area first.");
   return;
-
  }
 
  const x=Math.round(Math.min(selection.x1,selection.x2));
@@ -1024,11 +879,8 @@ async function useCrop(){
  const h=Math.round(Math.abs(selection.y2-selection.y1));
 
  if(w<10 || h<10){
-
-  alert("Bada area select karein.");
-
+  alert("Select a bigger area.");
   return;
-
  }
 
  const temp=document.createElement("canvas");
@@ -1036,67 +888,49 @@ async function useCrop(){
  temp.width=w;
  temp.height=h;
 
- temp.getContext("2d").drawImage(
-  originalImage,x,y,w,h,0,0,w,h
- );
+ temp.getContext("2d").drawImage(originalImage,x,y,w,h,0,0,w,h);
 
  await readCameraText(temp);
 
 }
 
-
 async function useFullCameraImage(){
 
  if(!originalReady){
-
-  alert("Image ready nahi hai.");
-
+  alert("Image not ready.");
   return;
-
  }
 
  await readCameraText(originalImage);
 
 }
 
-
 async function readCameraText(source){
 
  document.getElementById("scanResult").classList.remove("hidden");
 
- document.getElementById("cameraStatus").innerText=
- "Reading text...";
+ document.getElementById("cameraStatus").innerText="Reading text...";
 
  document.getElementById("scanText").value="";
 
  try{
 
-  const result=await Tesseract.recognize(
-   source,"eng",
-   {
-    logger:m=>{
-
-     if(m.status==="recognizing text"){
-
-      document.getElementById("cameraStatus").innerText=
-      "Scanning: "+Math.round(m.progress*100)+"%";
-
-     }
-
+  const result=await Tesseract.recognize(source,"eng",{
+   logger:m=>{
+    if(m.status==="recognizing text"){
+     document.getElementById("cameraStatus").innerText=
+     "Scanning: "+Math.round(m.progress*100)+"%";
     }
    }
-  );
+  });
 
-  document.getElementById("scanText").value=
-  result.data.text.trim();
+  document.getElementById("scanText").value=result.data.text.trim();
 
-  document.getElementById("cameraStatus").innerText=
-  "Scan complete. Check and submit.";
+  document.getElementById("cameraStatus").innerText="Scan complete.";
 
  }catch(error){
 
-  document.getElementById("cameraStatus").innerText=
-  "OCR failed: "+error.message;
+  document.getElementById("cameraStatus").innerText="OCR failed: "+error.message;
 
  }
 
@@ -1114,38 +948,23 @@ function checkDuplicates(text){
  const masterSet=new Set(masterData);
 
  return lines.map(line=>({
-
   text:line,
-
   duplicate:masterSet.has(normalize(line))
-
  }));
 
 }
-
-
-// SAVE SCAN DATA
 
 function saveScannedData(){
 
  const text=document.getElementById("scanText").value.trim();
 
- if(!text){
-
-  alert("Please scan or enter text.");
-
-  return;
-
- }
+ if(!text){alert("Enter or scan text.");return;}
 
  saveRecord(text);
 
  document.getElementById("scanText").value="";
 
 }
-
-
-// SAVE RECORD FUNCTION
 
 function saveRecord(text){
 
@@ -1154,15 +973,10 @@ function saveRecord(text){
  const duplicates=checked.filter(x=>x.duplicate);
 
  records.push({
-
   Text:text,
-
   Date:new Date().toLocaleString("en-IN"),
-
   Lines:checked,
-
   HasDuplicate:duplicates.length>0
-
  });
 
  localStorage.setItem("scannerData",JSON.stringify(records));
@@ -1170,19 +984,12 @@ function saveRecord(text){
  showRecords();
 
  if(duplicates.length>0){
-
   showDuplicatePopup(duplicates);
-
  }else{
-
   alert("New data saved successfully!");
-
  }
 
 }
-
-
-// DUPLICATE POPUP
 
 function showDuplicatePopup(duplicates){
 
@@ -1195,7 +1002,6 @@ function showDuplicatePopup(duplicates){
   const div=document.createElement("div");
 
   div.textContent=item.text;
-
   div.style.padding="5px";
 
   box.appendChild(div);
@@ -1208,7 +1014,6 @@ function showDuplicatePopup(duplicates){
  document.getElementById("popup").classList.remove("hidden");
 
 }
-
 
 function closePopup(){
 
@@ -1223,7 +1028,7 @@ function closePopup(){
 }
 
 
-// SHOW RECORDS
+// RECORDS
 
 function showRecords(){
 
@@ -1231,19 +1036,15 @@ function showRecords(){
  "Total Records: "+records.length;
 
  const box=document.getElementById("records");
-
  box.innerHTML="";
 
  records.forEach((item,index)=>{
 
   const div=document.createElement("div");
-
   div.className="record";
 
   const heading=document.createElement("b");
-
-  heading.textContent=
-  "Record "+(index+1)+" - "+item.Date;
+  heading.textContent="Record "+(index+1)+" - "+item.Date;
 
   div.appendChild(heading);
 
@@ -1266,13 +1067,11 @@ function showRecords(){
    tag.textContent=line.duplicate?"DUPLICATE":"NEW";
 
    row.appendChild(tag);
-
    div.appendChild(row);
 
   });
 
   const del=document.createElement("button");
-
   del.className="red";
   del.textContent="DELETE";
 
@@ -1282,9 +1081,7 @@ function showRecords(){
 
     records.splice(index,1);
 
-    localStorage.setItem(
-     "scannerData",JSON.stringify(records)
-    );
+    localStorage.setItem("scannerData",JSON.stringify(records));
 
     showRecords();
 
@@ -1293,24 +1090,17 @@ function showRecords(){
   };
 
   div.appendChild(del);
-
   box.appendChild(div);
 
  });
 
 }
 
-
-// EXCEL DOWNLOAD
-
 function downloadExcel(){
 
  if(!records.length){
-
   alert("No records found.");
-
   return;
-
  }
 
  const data=[];
@@ -1322,15 +1112,10 @@ function downloadExcel(){
   lines.forEach(line=>{
 
    data.push({
-
     "Record No":index+1,
-
     "Scanned Text":line.text,
-
     "Status":line.duplicate?"DUPLICATE":"NEW",
-
     "Date":item.Date
-
    });
 
   });
@@ -1338,21 +1123,21 @@ function downloadExcel(){
  });
 
  const sheet=XLSX.utils.json_to_sheet(data);
-
  const book=XLSX.utils.book_new();
 
- XLSX.utils.book_append_sheet(
-  book,sheet,"Scanner Data"
- );
+ XLSX.utils.book_append_sheet(book,sheet,"Scanner Data");
 
  XLSX.writeFile(book,"Scanner_Data.xlsx");
 
 }
 
 
-// PAGE 3: FULL IMAGE SCAN
+// =================================
+// FULL IMAGE SCANNER - IMPROVED
+// =================================
 
 let selectedFullImage=null;
+let processedImageCanvas=null;
 
 function loadFullImage(event){
 
@@ -1361,58 +1146,229 @@ function loadFullImage(event){
  if(!file)return;
 
  if(!file.type.startsWith("image/")){
-
-  alert("Please select an image file.");
-
+  alert("Please select an image.");
   return;
-
  }
 
  selectedFullImage=file;
+ processedImageCanvas=null;
 
  const preview=document.getElementById("fullImagePreview");
 
- preview.src=URL.createObjectURL(file);
+ const oldURL=preview.dataset.url;
+
+ if(oldURL)URL.revokeObjectURL(oldURL);
+
+ const url=URL.createObjectURL(file);
+
+ preview.dataset.url=url;
+ preview.src=url;
 
  preview.classList.remove("hidden");
 
- document.getElementById("imageStatus").innerText=
- "Image selected. Click Scan Full Image.";
-
  document.getElementById("fullImageText").value="";
+
+ document.getElementById("imageStatus").innerText=
+ "Image loaded. Prepare image or scan directly.";
 
 }
 
 
-// FULL IMAGE OCR
+// IMAGE ENHANCEMENT
+
+function enhanceImage(image){
+
+ const canvas=document.createElement("canvas");
+
+ const maxDimension=5000;
+ const scale=Math.min(
+  3,
+  maxDimension/Math.max(image.width,image.height)
+ );
+
+ canvas.width=Math.round(image.width*scale);
+ canvas.height=Math.round(image.height*scale);
+
+ const ctx=canvas.getContext("2d",{
+  willReadFrequently:true
+ });
+
+ // HIGH RESOLUTION DRAW
+ ctx.drawImage(
+  image,0,0,canvas.width,canvas.height
+ );
+
+ const imageData=ctx.getImageData(
+  0,0,canvas.width,canvas.height
+ );
+
+ const pixels=imageData.data;
+
+ // GRAYSCALE + CONTRAST ENHANCEMENT
+ const contrast=1.35;
+ const brightness=0;
+
+ for(let i=0;i<pixels.length;i+=4){
+
+  const gray=
+   0.299*pixels[i]+
+   0.587*pixels[i+1]+
+   0.114*pixels[i+2];
+
+  let value=(gray-128)*contrast+128+brightness;
+
+  value=Math.max(0,Math.min(255,value));
+
+  pixels[i]=value;
+  pixels[i+1]=value;
+  pixels[i+2]=value;
+
+ }
+
+ ctx.putImageData(imageData,0,0);
+
+ // LIGHT SHARPENING
+ const sharpen=ctx.getImageData(
+  0,0,canvas.width,canvas.height
+ );
+
+ const src=sharpen.data;
+
+ const output=new Uint8ClampedArray(src);
+
+ const width=canvas.width;
+ const height=canvas.height;
+
+ for(let y=1;y<height-1;y++){
+
+  for(let x=1;x<width-1;x++){
+
+   const i=(y*width+x)*4;
+
+   for(let c=0;c<3;c++){
+
+    const center=src[i+c];
+
+    const top=src[((y-1)*width+x)*4+c];
+    const bottom=src[((y+1)*width+x)*4+c];
+
+    const left=src[(y*width+x-1)*4+c];
+    const right=src[(y*width+x+1)*4+c];
+
+    let val=center*1.4-
+    (top+bottom+left+right)*0.1;
+
+    output[i+c]=Math.max(0,Math.min(255,val));
+
+   }
+
+  }
+
+ }
+
+ const finalData=new ImageData(
+  output,width,height
+ );
+
+ ctx.putImageData(finalData,0,0);
+
+ return canvas;
+
+}
+
+
+// PREPARE IMAGE
+
+async function prepareImage(){
+
+ if(!selectedFullImage){
+  alert("Pehle image upload karein.");
+  return;
+ }
+
+ const status=document.getElementById("imageStatus");
+
+ status.innerText="Preparing high quality image...";
+
+ try{
+
+  const image=new Image();
+
+  const url=URL.createObjectURL(selectedFullImage);
+
+  image.src=url;
+
+  await new Promise((resolve,reject)=>{
+   image.onload=resolve;
+   image.onerror=reject;
+  });
+
+  processedImageCanvas=enhanceImage(image);
+
+  URL.revokeObjectURL(url);
+
+  status.innerText=
+  "Image enhanced successfully. Now click SCAN FULL IMAGE.";
+
+ }catch(error){
+
+  status.innerText="Image preparation failed: "+error.message;
+
+ }
+
+}
+
+
+// FULL PAGE OCR
 
 async function scanFullImage(){
 
  if(!selectedFullImage){
-
   alert("Pehle image select karein.");
-
   return;
-
  }
 
- document.getElementById("imageStatus").innerText=
- "Reading full image...";
+ const status=document.getElementById("imageStatus");
+ const output=document.getElementById("fullImageText");
 
- document.getElementById("fullImageText").value="";
+ output.value="";
 
  try{
 
+  status.innerText="Preparing full page...";
+
+  // AUTO PREPARE IF NOT ALREADY PREPARED
+  if(!processedImageCanvas){
+
+   const image=new Image();
+   const url=URL.createObjectURL(selectedFullImage);
+
+   image.src=url;
+
+   await new Promise((resolve,reject)=>{
+    image.onload=resolve;
+    image.onerror=reject;
+   });
+
+   processedImageCanvas=enhanceImage(image);
+
+   URL.revokeObjectURL(url);
+
+  }
+
+  status.innerText="Full page OCR starting...";
+
   const result=await Tesseract.recognize(
-   selectedFullImage,
+   processedImageCanvas,
    "eng",
    {
     logger:m=>{
 
      if(m.status==="recognizing text"){
 
-      document.getElementById("imageStatus").innerText=
-      "Scanning: "+Math.round(m.progress*100)+"%";
+      status.innerText=
+      "FULL PAGE SCANNING: "+
+      Math.round(m.progress*100)+"%";
 
      }
 
@@ -1420,34 +1376,31 @@ async function scanFullImage(){
    }
   );
 
-  document.getElementById("fullImageText").value=
-  result.data.text.trim();
+  // PRESERVE CAPITAL, SMALL LETTERS AND NUMBERS
+  output.value=result.data.text;
 
-  document.getElementById("imageStatus").innerText=
-  "Full image converted to text successfully.";
+  status.innerText=
+  "Full page scan complete. Please verify the text.";
 
  }catch(error){
 
-  document.getElementById("imageStatus").innerText=
-  "Image scanning failed: "+error.message;
+  status.innerText=
+  "Scanning failed: "+error.message;
 
  }
 
 }
 
 
-// COPY FULL IMAGE TEXT
+// COPY TEXT
 
 async function copyFullText(){
 
  const text=document.getElementById("fullImageText").value;
 
  if(!text.trim()){
-
   alert("No text available.");
-
   return;
-
  }
 
  try{
@@ -1458,25 +1411,22 @@ async function copyFullText(){
 
  }catch(error){
 
-  alert("Copy failed. Select and copy manually.");
+  alert("Copy failed. Select text manually.");
 
  }
 
 }
 
 
-// DOWNLOAD TEXT
+// DOWNLOAD TXT
 
 function downloadText(){
 
  const text=document.getElementById("fullImageText").value;
 
  if(!text.trim()){
-
   alert("No text available.");
-
   return;
-
  }
 
  const blob=new Blob([text],{
@@ -1488,7 +1438,7 @@ function downloadText(){
  const a=document.createElement("a");
 
  a.href=url;
- a.download="Scanned_Image_Text.txt";
+ a.download="Full_Image_Scanned_Text.txt";
 
  a.click();
 
@@ -1497,18 +1447,15 @@ function downloadText(){
 }
 
 
-// SAVE IMAGE OCR TEXT IN SCAN RECORDS
+// SAVE FULL IMAGE TEXT
 
 function saveImageText(){
 
  const text=document.getElementById("fullImageText").value.trim();
 
  if(!text){
-
   alert("Pehle image scan karein.");
-
   return;
-
  }
 
  saveRecord(text);
