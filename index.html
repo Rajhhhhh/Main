@@ -1,19 +1,282 @@
-<!-- index.html -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Index Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Scanner</title>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f5f9;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+}
+
+.app {
+  background:white;
+  width:100%;
+  max-width:420px;
+  padding:22px;
+  border-radius:14px;
+  box-shadow:0 4px 20px #0001;
+  text-align:center;
+}
+
+h2 { color:#183b68; margin-top:0; }
+
+video {
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  background:#111;
+  border-radius:10px;
+}
+
+input {
+  width:100%;
+  padding:15px;
+  margin:15px 0;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:20px;
+  text-align:center;
+}
+
+button {
+  width:100%;
+  padding:14px;
+  margin:5px 0;
+  border:0;
+  border-radius:8px;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.scan { background:#1769aa; }
+.submit { background:#16864a; }
+.download { background:#253d65; }
+
+#status {
+  font-size:13px;
+  color:#1769aa;
+  min-height:18px;
+}
+
+#total {
+  margin:15px;
+  font-weight:bold;
+  color:#333;
+}
+
+/* Permission popup */
+#permission {
+  position:fixed;
+  inset:0;
+  background:#0009;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.popup {
+  background:white;
+  max-width:330px;
+  width:100%;
+  padding:25px;
+  border-radius:12px;
+  text-align:center;
+}
+
+.hidden { display:none !important; }
+</style>
 </head>
+
 <body>
 
-    <h1>Index Page</h1>
+<div class="app">
 
-    <a href="page1.html">Open Page 1</a><br>
-    <a href="page2.html">Open Page 2</a><br>
-    <a href="page3.html">Open Page 3</a><br>
-    <a href="page4.html">Open Page 4</a><br>
-    <a href="page5.html">Open Page 5</a>
+  <h2>NUMBER SCANNER</h2>
 
-    
+  <video id="video" autoplay playsinline></video>
+
+  <button class="scan" onclick="scanNumber()">
+    SCAN NUMBER
+  </button>
+
+  <input id="number" type="text"
+  inputmode="numeric" placeholder="Enter / Scan Number">
+
+  <button class="submit" onclick="saveNumber()">
+    SUBMIT
+  </button>
+
+  <p id="status">Ready to scan</p>
+
+  <div id="total">Total Records: 0</div>
+
+  <button class="download" onclick="downloadExcel()">
+    DOWNLOAD EXCEL
+  </button>
+
+</div>
+
+<!-- Permission Popup -->
+<div id="permission">
+  <div class="popup">
+    <h2>Camera Permission</h2>
+    <p>Number scan karne ke liye camera permission allow karein.</p>
+    <button class="scan" onclick="allowCamera()">
+      ALLOW & CONTINUE
+    </button>
+    <p id="permissionStatus"></p>
+  </div>
+</div>
+
+<script>
+
+let cameraStream = null;
+
+let records = JSON.parse(
+  localStorage.getItem("numbers") || "[]"
+);
+
+const video = document.getElementById("video");
+const input = document.getElementById("number");
+const statusText = document.getElementById("status");
+
+// CAMERA PERMISSION
+async function allowCamera() {
+
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:"environment"},
+      audio:false
+    });
+
+    video.srcObject = cameraStream;
+
+    document.getElementById("permission").classList.add("hidden");
+
+    statusText.innerText = "Camera Ready";
+
+  } catch(error) {
+
+    document.getElementById("permissionStatus").innerText =
+      "Camera permission nahi mila. Settings check karein.";
+
+  }
+}
+
+// SCAN NUMBER
+async function scanNumber() {
+
+  if (!cameraStream) {
+    alert("Camera permission required!");
+    return;
+  }
+
+  statusText.innerText = "Scanning...";
+
+  try {
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    canvas.getContext("2d").drawImage(
+      video,0,0,canvas.width,canvas.height
+    );
+
+    const result = await Tesseract.recognize(
+      canvas,
+      "eng",
+      {
+        logger:m => {
+          if(m.status === "recognizing text") {
+            statusText.innerText =
+              "Scanning " + Math.round(m.progress*100) + "%";
+          }
+        }
+      }
+    );
+
+    const numbers = result.data.text.match(/\d+/g);
+
+    if(numbers) {
+      input.value = numbers.join("");
+      statusText.innerText = "Number detected. Verify and submit.";
+    } else {
+      statusText.innerText = "Number not found. Try again.";
+    }
+
+  } catch(error) {
+    statusText.innerText = "Scanning failed.";
+  }
+}
+
+// SUBMIT NUMBER
+function saveNumber() {
+
+  const number = input.value.trim();
+
+  if(!/^\d+$/.test(number)) {
+    alert("Please enter a valid number.");
+    return;
+  }
+
+  records.push({
+    Number:number,
+    Date:new Date().toLocaleString("en-IN")
+  });
+
+  localStorage.setItem("numbers",JSON.stringify(records));
+
+  input.value = "";
+
+  statusText.innerText = "Successfully Saved!";
+
+  showTotal();
+}
+
+// TOTAL RECORDS
+function showTotal() {
+  document.getElementById("total").innerText =
+    "Total Records: " + records.length;
+}
+
+// EXCEL DOWNLOAD
+function downloadExcel() {
+
+  if(records.length === 0) {
+    alert("No records found!");
+    return;
+  }
+
+  const sheet = XLSX.utils.json_to_sheet(records);
+  const book = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(book,sheet,"Numbers");
+
+  XLSX.writeFile(book,"Scanner_Data.xlsx");
+}
+
+showTotal();
+
+</script>
+
 </body>
 </html>
