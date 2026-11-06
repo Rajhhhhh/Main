@@ -3,104 +3,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Number Scanner</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Text Scanner</title>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
-* { box-sizing:border-box; }
-
-body {
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f3f5f9;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:15px;
+*{box-sizing:border-box}
+body{
+ margin:0;padding:12px;background:#f1f4f8;
+ font-family:Arial,sans-serif;color:#222
 }
-
-.app {
-  background:white;
-  width:100%;
-  max-width:420px;
-  padding:22px;
-  border-radius:14px;
-  box-shadow:0 4px 20px #0001;
-  text-align:center;
+.app{
+ max-width:750px;margin:auto;background:white;
+ padding:15px;border-radius:12px;
+ box-shadow:0 3px 15px #0001
 }
-
-h2 { color:#183b68; margin-top:0; }
-
-video {
-  width:100%;
-  height:210px;
-  object-fit:cover;
-  background:#111;
-  border-radius:10px;
+h2{text-align:center;color:#174477;margin:5px 0 15px}
+video{
+ width:100%;height:170px;object-fit:cover;
+ background:#111;border-radius:8px
 }
-
-input {
-  width:100%;
-  padding:15px;
-  margin:15px 0;
-  border:1px solid #ccc;
-  border-radius:8px;
-  font-size:20px;
-  text-align:center;
+button{
+ border:0;padding:12px;border-radius:7px;
+ color:white;font-size:14px;cursor:pointer;
+ margin:4px 2px
 }
-
-button {
-  width:100%;
-  padding:14px;
-  margin:5px 0;
-  border:0;
-  border-radius:8px;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
+.blue{background:#1769aa}
+.green{background:#16864a}
+.orange{background:#e18a16}
+.red{background:#d93636}
+.gray{background:#555}
+.full{width:100%}
+#cropCanvas{
+ width:100%;height:auto;display:block;
+ border:2px solid #1769aa;
+ border-radius:6px;touch-action:none;
+ cursor:crosshair
 }
-
-.scan { background:#1769aa; }
-.submit { background:#16864a; }
-.download { background:#253d65; }
-
-#status {
-  font-size:13px;
-  color:#1769aa;
-  min-height:18px;
+#cropSection,#resultSection{display:none;margin-top:15px}
+textarea{
+ width:100%;min-height:120px;
+ padding:12px;font-size:17px;
+ border:1px solid #ccc;border-radius:7px;
+ resize:vertical
 }
-
-#total {
-  margin:15px;
-  font-weight:bold;
-  color:#333;
+.status{font-size:13px;color:#1769aa;min-height:18px}
+.record{
+ padding:10px;border-bottom:1px solid #ddd;
+ overflow-wrap:anywhere;font-size:14px
 }
-
-/* Permission popup */
-#permission {
-  position:fixed;
-  inset:0;
-  background:#0009;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
+#permission{
+ position:fixed;inset:0;background:#0009;
+ display:flex;justify-content:center;align-items:center;
+ padding:20px;z-index:10
 }
-
-.popup {
-  background:white;
-  max-width:330px;
-  width:100%;
-  padding:25px;
-  border-radius:12px;
-  text-align:center;
+.popup{
+ background:white;padding:25px;border-radius:12px;
+ max-width:350px;width:100%;text-align:center
 }
-
-.hidden { display:none !important; }
+.hidden{display:none!important}
 </style>
 </head>
 
@@ -108,173 +71,366 @@ button {
 
 <div class="app">
 
-  <h2>NUMBER SCANNER</h2>
+<h2>SMART TEXT SCANNER</h2>
 
-  <video id="video" autoplay playsinline></video>
+<!-- CAMERA -->
+<video id="video" autoplay playsinline></video>
 
-  <button class="scan" onclick="scanNumber()">
-    SCAN NUMBER
-  </button>
+<div>
+<button class="blue" onclick="startCamera()">START CAMERA</button>
+<button class="red" onclick="stopCamera()">STOP CAMERA</button>
+</div>
 
-  <input id="number" type="text"
-  inputmode="numeric" placeholder="Enter / Scan Number">
+<button class="green full" onclick="captureImage()">
+CAPTURE IMAGE
+</button>
 
-  <button class="submit" onclick="saveNumber()">
-    SUBMIT
-  </button>
+<p class="status" id="status">Camera ready karein.</p>
 
-  <p id="status">Ready to scan</p>
+<!-- CROP -->
+<div id="cropSection">
+<h3>Select Required Area</h3>
+<p style="font-size:13px;color:#666">
+Finger ya mouse se image par box banakar required text select karein.
+</p>
 
-  <div id="total">Total Records: 0</div>
+<canvas id="cropCanvas"></canvas>
 
-  <button class="download" onclick="downloadExcel()">
-    DOWNLOAD EXCEL
-  </button>
+<button class="orange full" onclick="cropImage()">
+CROP SELECTED AREA
+</button>
+</div>
+
+<!-- OCR RESULT -->
+<div id="resultSection">
+<h3>Scanned Text</h3>
+
+<canvas id="outputCanvas" style="width:100%;display:none"></canvas>
+
+<textarea id="textData"
+placeholder="Scanned text yahan aayega..."></textarea>
+
+<button class="green full" onclick="saveData()">
+SUBMIT / SAVE DATA
+</button>
+</div>
+
+<hr>
+
+<h3>Saved Data</h3>
+
+<div id="total">Total Records: 0</div>
+
+<button class="blue full" onclick="downloadExcel()">
+DOWNLOAD EXCEL
+</button>
+
+<div id="records"></div>
 
 </div>
 
-<!-- Permission Popup -->
+<!-- CAMERA PERMISSION -->
 <div id="permission">
-  <div class="popup">
-    <h2>Camera Permission</h2>
-    <p>Number scan karne ke liye camera permission allow karein.</p>
-    <button class="scan" onclick="allowCamera()">
-      ALLOW & CONTINUE
-    </button>
-    <p id="permissionStatus"></p>
-  </div>
+ <div class="popup">
+  <h3>Camera Permission</h3>
+  <p>Image capture karne ke liye camera permission allow karein.</p>
+  <button class="blue full" onclick="startCamera()">ALLOW CAMERA</button>
+  <p id="permissionError" style="font-size:13px;color:red"></p>
+ </div>
 </div>
 
 <script>
 
-let cameraStream = null;
+const video=document.getElementById("video");
+const cropCanvas=document.getElementById("cropCanvas");
+const cropCtx=cropCanvas.getContext("2d");
+const outputCanvas=document.getElementById("outputCanvas");
+const outputCtx=outputCanvas.getContext("2d");
 
-let records = JSON.parse(
-  localStorage.getItem("numbers") || "[]"
+let stream=null;
+let originalCanvas=document.createElement("canvas");
+let startX=0,startY=0,endX=0,endY=0;
+let drawing=false,selection=null;
+
+let records=JSON.parse(
+ localStorage.getItem("scannerData")||"[]"
 );
 
-const video = document.getElementById("video");
-const input = document.getElementById("number");
-const statusText = document.getElementById("status");
-
-// CAMERA PERMISSION
-async function allowCamera() {
-
-  try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:"environment"},
-      audio:false
-    });
-
-    video.srcObject = cameraStream;
-
-    document.getElementById("permission").classList.add("hidden");
-
-    statusText.innerText = "Camera Ready";
-
-  } catch(error) {
-
-    document.getElementById("permissionStatus").innerText =
-      "Camera permission nahi mila. Settings check karein.";
-
-  }
-}
-
-// SCAN NUMBER
-async function scanNumber() {
-
-  if (!cameraStream) {
-    alert("Camera permission required!");
-    return;
-  }
-
-  statusText.innerText = "Scanning...";
-
-  try {
-
-    const canvas = document.createElement("canvas");
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    canvas.getContext("2d").drawImage(
-      video,0,0,canvas.width,canvas.height
-    );
-
-    const result = await Tesseract.recognize(
-      canvas,
-      "eng",
-      {
-        logger:m => {
-          if(m.status === "recognizing text") {
-            statusText.innerText =
-              "Scanning " + Math.round(m.progress*100) + "%";
-          }
-        }
-      }
-    );
-
-    const numbers = result.data.text.match(/\d+/g);
-
-    if(numbers) {
-      input.value = numbers.join("");
-      statusText.innerText = "Number detected. Verify and submit.";
-    } else {
-      statusText.innerText = "Number not found. Try again.";
-    }
-
-  } catch(error) {
-    statusText.innerText = "Scanning failed.";
-  }
-}
-
-// SUBMIT NUMBER
-function saveNumber() {
-
-  const number = input.value.trim();
-
-  if(!/^\d+$/.test(number)) {
-    alert("Please enter a valid number.");
-    return;
-  }
-
-  records.push({
-    Number:number,
-    Date:new Date().toLocaleString("en-IN")
+// CAMERA START
+async function startCamera(){
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({
+   video:{facingMode:{ideal:"environment"}},
+   audio:false
   });
 
-  localStorage.setItem("numbers",JSON.stringify(records));
+  video.srcObject=stream;
+  await video.play();
 
-  input.value = "";
+  document.getElementById("permission").classList.add("hidden");
+  document.getElementById("permissionError").innerText="";
+  document.getElementById("status").innerText="Camera started.";
 
-  statusText.innerText = "Successfully Saved!";
-
-  showTotal();
+ }catch(error){
+  document.getElementById("permissionError").innerText=
+   error.name+": "+error.message+
+   " | HTTPS aur browser camera permission check karein.";
+ }
 }
 
-// TOTAL RECORDS
-function showTotal() {
-  document.getElementById("total").innerText =
-    "Total Records: " + records.length;
+// CAMERA STOP
+function stopCamera(){
+ if(stream){
+  stream.getTracks().forEach(track=>track.stop());
+  stream=null;
+  video.srcObject=null;
+ }
+ document.getElementById("status").innerText="Camera stopped.";
+}
+
+// CAPTURE IMAGE
+function captureImage(){
+
+ if(!stream){
+  alert("Pehle camera start karein.");
+  return;
+ }
+
+ if(!video.videoWidth){
+  alert("Camera ready hone ka wait karein.");
+  return;
+ }
+
+ originalCanvas.width=video.videoWidth;
+ originalCanvas.height=video.videoHeight;
+
+ originalCanvas.getContext("2d").drawImage(
+  video,0,0,originalCanvas.width,originalCanvas.height
+ );
+
+ cropCanvas.width=originalCanvas.width;
+ cropCanvas.height=originalCanvas.height;
+
+ selection=null;
+ redrawCrop();
+
+ document.getElementById("cropSection").style.display="block";
+ document.getElementById("resultSection").style.display="none";
+ document.getElementById("status").innerText=
+  "Image captured. Ab area select karein.";
+}
+
+// DRAW CROP SELECTION
+function redrawCrop(){
+ cropCtx.clearRect(0,0,cropCanvas.width,cropCanvas.height);
+ cropCtx.drawImage(originalCanvas,0,0);
+
+ if(selection){
+  const x=Math.min(selection.x1,selection.x2);
+  const y=Math.min(selection.y1,selection.y2);
+  const w=Math.abs(selection.x2-selection.x1);
+  const h=Math.abs(selection.y2-selection.y1);
+
+  cropCtx.fillStyle="rgba(0,0,0,0.35)";
+  cropCtx.fillRect(0,0,cropCanvas.width,cropCanvas.height);
+
+  cropCtx.clearRect(x,y,w,h);
+  cropCtx.drawImage(originalCanvas,x,y,w,h,x,y,w,h);
+
+  cropCtx.strokeStyle="#00ff66";
+  cropCtx.lineWidth=Math.max(3,cropCanvas.width/400);
+  cropCtx.strokeRect(x,y,w,h);
+ }
+}
+
+// POINTER POSITION
+function getPosition(e){
+ const rect=cropCanvas.getBoundingClientRect();
+
+ return {
+  x:(e.clientX-rect.left)*(cropCanvas.width/rect.width),
+  y:(e.clientY-rect.top)*(cropCanvas.height/rect.height)
+ };
+}
+
+// MOUSE AND TOUCH SELECTION
+cropCanvas.addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ cropCanvas.setPointerCapture(e.pointerId);
+
+ const p=getPosition(e);
+ startX=p.x;
+ startY=p.y;
+ endX=p.x;
+ endY=p.y;
+ drawing=true;
+
+ selection={x1:startX,y1:startY,x2:endX,y2:endY};
+ redrawCrop();
+});
+
+cropCanvas.addEventListener("pointermove",e=>{
+ if(!drawing)return;
+
+ const p=getPosition(e);
+ endX=p.x;
+ endY=p.y;
+
+ selection={x1:startX,y1:startY,x2:endX,y2:endY};
+ redrawCrop();
+});
+
+function finishSelection(e){
+ if(!drawing)return;
+ const p=getPosition(e);
+ endX=p.x;
+ endY=p.y;
+ selection={x1:startX,y1:startY,x2:endX,y2:endY};
+ drawing=false;
+ redrawCrop();
+}
+
+cropCanvas.addEventListener("pointerup",finishSelection);
+cropCanvas.addEventListener("pointercancel",()=>{
+ drawing=false;
+});
+
+// CROP IMAGE
+async function cropImage(){
+
+ if(!selection){
+  alert("Pehle image ka area select karein.");
+  return;
+ }
+
+ const x=Math.round(Math.min(selection.x1,selection.x2));
+ const y=Math.round(Math.min(selection.y1,selection.y2));
+ const w=Math.round(Math.abs(selection.x2-selection.x1));
+ const h=Math.round(Math.abs(selection.y2-selection.y1));
+
+ if(w<10||h<10){
+  alert("Thoda bada area select karein.");
+  return;
+ }
+
+ outputCanvas.width=w;
+ outputCanvas.height=h;
+
+ outputCtx.drawImage(originalCanvas,x,y,w,h,0,0,w,h);
+
+ document.getElementById("resultSection").style.display="block";
+ document.getElementById("textData").value="";
+ document.getElementById("status").innerText="Reading text...";
+
+ // OCR
+ try{
+
+  const result=await Tesseract.recognize(
+   outputCanvas,
+   "eng",
+   {
+    logger:m=>{
+     if(m.status==="recognizing text"){
+      document.getElementById("status").innerText=
+       "Reading text: "+Math.round(m.progress*100)+"%";
+     }
+    }
+   }
+  );
+
+  document.getElementById("textData").value=
+   result.data.text.trim();
+
+  document.getElementById("status").innerText=
+   "Text scan complete. Please check the result.";
+
+ }catch(error){
+  document.getElementById("status").innerText=
+   "OCR failed. Internet connection check karein.";
+ }
+}
+
+// SAVE DATA
+function saveData(){
+
+ const text=document.getElementById("textData").value.trim();
+
+ if(!text){
+  alert("No text available.");
+  return;
+ }
+
+ records.push({
+  Text:text,
+  Date:new Date().toLocaleString("en-IN")
+ });
+
+ localStorage.setItem("scannerData",JSON.stringify(records));
+
+ document.getElementById("textData").value="";
+ document.getElementById("status").innerText="Data saved successfully.";
+
+ showRecords();
+}
+
+// SHOW RECORDS
+function showRecords(){
+
+ document.getElementById("total").innerText=
+  "Total Records: "+records.length;
+
+ const box=document.getElementById("records");
+ box.innerHTML="";
+
+ records.forEach((item,index)=>{
+
+  const div=document.createElement("div");
+  div.className="record";
+
+  const content=document.createElement("div");
+  content.textContent=(index+1)+". "+item.Text+
+   "\n"+item.Date;
+  content.style.whiteSpace="pre-wrap";
+
+  const del=document.createElement("button");
+  del.className="red";
+  del.textContent="DELETE";
+  del.onclick=()=>{
+   if(confirm("Delete this record?")){
+    records.splice(index,1);
+    localStorage.setItem("scannerData",JSON.stringify(records));
+    showRecords();
+   }
+  };
+
+  div.append(content,del);
+  box.appendChild(div);
+ });
 }
 
 // EXCEL DOWNLOAD
-function downloadExcel() {
+function downloadExcel(){
 
-  if(records.length === 0) {
-    alert("No records found!");
-    return;
-  }
+ if(!records.length){
+  alert("No data available.");
+  return;
+ }
 
-  const sheet = XLSX.utils.json_to_sheet(records);
-  const book = XLSX.utils.book_new();
+ const data=records.map((item,index)=>({
+  "Sr No":index+1,
+  "Scanned Text":item.Text,
+  "Date":item.Date
+ }));
 
-  XLSX.utils.book_append_sheet(book,sheet,"Numbers");
+ const sheet=XLSX.utils.json_to_sheet(data);
+ const book=XLSX.utils.book_new();
 
-  XLSX.writeFile(book,"Scanner_Data.xlsx");
+ XLSX.utils.book_append_sheet(book,sheet,"Scanner Data");
+
+ XLSX.writeFile(book,"Scanned_Data.xlsx");
 }
 
-showTotal();
+showRecords();
 
 </script>
 
