@@ -3,67 +3,130 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Smart Text Scanner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Line Scanner</title>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
 *{box-sizing:border-box}
+
 body{
- margin:0;padding:12px;background:#f1f4f8;
- font-family:Arial,sans-serif;color:#222
+  margin:0;
+  padding:15px;
+  background:#f1f4f8;
+  font-family:Arial,sans-serif;
+  color:#222;
 }
+
 .app{
- max-width:750px;margin:auto;background:white;
- padding:15px;border-radius:12px;
- box-shadow:0 3px 15px #0001
+  max-width:600px;
+  margin:auto;
+  background:white;
+  padding:18px;
+  border-radius:12px;
+  box-shadow:0 3px 15px #0001;
 }
-h2{text-align:center;color:#174477;margin:5px 0 15px}
+
+h2{text-align:center;color:#174477}
+
+.camera-frame{
+  width:100%;
+  aspect-ratio:4/1;
+  overflow:hidden;
+  border:3px solid #16864a;
+  border-radius:8px;
+  background:#111;
+  position:relative;
+}
+
 video{
- width:100%;height:170px;object-fit:cover;
- background:#111;border-radius:8px
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
 }
+
+.frame-label{
+  text-align:center;
+  font-size:12px;
+  color:#16864a;
+  margin:7px;
+}
+
 button{
- border:0;padding:12px;border-radius:7px;
- color:white;font-size:14px;cursor:pointer;
- margin:4px 2px
+  width:100%;
+  padding:13px;
+  margin:5px 0;
+  border:0;
+  border-radius:7px;
+  font-size:15px;
+  color:white;
+  cursor:pointer;
 }
+
 .blue{background:#1769aa}
 .green{background:#16864a}
-.orange{background:#e18a16}
+.orange{background:#dc8819}
 .red{background:#d93636}
 .gray{background:#555}
-.full{width:100%}
-#cropCanvas{
- width:100%;height:auto;display:block;
- border:2px solid #1769aa;
- border-radius:6px;touch-action:none;
- cursor:crosshair
+
+canvas{
+  max-width:100%;
+  height:auto;
+  display:block;
+  border:1px solid #ccc;
+  border-radius:6px;
+  touch-action:none;
 }
-#cropSection,#resultSection{display:none;margin-top:15px}
+
 textarea{
- width:100%;min-height:120px;
- padding:12px;font-size:17px;
- border:1px solid #ccc;border-radius:7px;
- resize:vertical
+  width:100%;
+  min-height:120px;
+  padding:12px;
+  font-size:17px;
+  border:1px solid #ccc;
+  border-radius:7px;
+  resize:vertical;
 }
-.status{font-size:13px;color:#1769aa;min-height:18px}
-.record{
- padding:10px;border-bottom:1px solid #ddd;
- overflow-wrap:anywhere;font-size:14px
+
+.section{margin-top:18px}
+.status{
+  color:#1769aa;
+  font-size:13px;
+  text-align:center;
+  min-height:18px;
 }
+
 #permission{
- position:fixed;inset:0;background:#0009;
- display:flex;justify-content:center;align-items:center;
- padding:20px;z-index:10
+  position:fixed;
+  inset:0;
+  z-index:10;
+  background:#0009;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
 }
+
 .popup{
- background:white;padding:25px;border-radius:12px;
- max-width:350px;width:100%;text-align:center
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  max-width:350px;
+  width:100%;
+  text-align:center;
 }
+
 .hidden{display:none!important}
+
+.record{
+  padding:12px;
+  border-bottom:1px solid #ddd;
+  overflow-wrap:anywhere;
+  white-space:pre-wrap;
+}
 </style>
 </head>
 
@@ -71,57 +134,73 @@ textarea{
 
 <div class="app">
 
-<h2>SMART TEXT SCANNER</h2>
+<h2>SMART LINE SCANNER</h2>
 
-<!-- CAMERA -->
-<video id="video" autoplay playsinline></video>
-
-<div>
-<button class="blue" onclick="startCamera()">START CAMERA</button>
-<button class="red" onclick="stopCamera()">STOP CAMERA</button>
+<!-- LIVE CAMERA FRAME -->
+<div class="camera-frame">
+  <video id="video" autoplay playsinline muted></video>
 </div>
 
-<button class="green full" onclick="captureImage()">
+<div class="frame-label">
+  Place required text inside this green frame
+</div>
+
+<button class="blue" onclick="startCamera()">
+START CAMERA
+</button>
+
+<button class="green" onclick="captureFrame()">
 CAPTURE IMAGE
 </button>
 
-<p class="status" id="status">Camera ready karein.</p>
+<button class="red" onclick="stopCamera()">
+STOP CAMERA
+</button>
 
-<!-- CROP -->
-<div id="cropSection">
-<h3>Select Required Area</h3>
+<p class="status" id="status">Camera permission required.</p>
+
+<!-- CAPTURED IMAGE -->
+<div id="cropSection" class="section hidden">
+
+<h3>Captured Image</h3>
+
 <p style="font-size:13px;color:#666">
-Finger ya mouse se image par box banakar required text select karein.
+Crop karna optional hai. Agar poori strip chahiye to bina crop kiye scan karein.
 </p>
 
-<canvas id="cropCanvas"></canvas>
+<canvas id="imageCanvas"></canvas>
 
-<button class="orange full" onclick="cropImage()">
-CROP SELECTED AREA
+<button class="orange" onclick="useCrop()">
+USE SELECTED CROP
 </button>
+
+<button class="gray" onclick="useFullImage()">
+USE FULL FRAME
+</button>
+
 </div>
 
-<!-- OCR RESULT -->
-<div id="resultSection">
-<h3>Scanned Text</h3>
+<!-- TEXT RESULT -->
+<div id="resultSection" class="section hidden">
 
-<canvas id="outputCanvas" style="width:100%;display:none"></canvas>
+<h3>Scanned Text</h3>
 
 <textarea id="textData"
 placeholder="Scanned text yahan aayega..."></textarea>
 
-<button class="green full" onclick="saveData()">
-SUBMIT / SAVE DATA
+<button class="green" onclick="saveData()">
+SUBMIT / SAVE
 </button>
+
 </div>
 
 <hr>
 
-<h3>Saved Data</h3>
+<h3>Saved Records</h3>
 
 <div id="total">Total Records: 0</div>
 
-<button class="blue full" onclick="downloadExcel()">
+<button class="blue" onclick="downloadExcel()">
 DOWNLOAD EXCEL
 </button>
 
@@ -129,38 +208,51 @@ DOWNLOAD EXCEL
 
 </div>
 
-<!-- CAMERA PERMISSION -->
+<!-- PERMISSION POPUP -->
 <div id="permission">
  <div class="popup">
   <h3>Camera Permission</h3>
-  <p>Image capture karne ke liye camera permission allow karein.</p>
-  <button class="blue full" onclick="startCamera()">ALLOW CAMERA</button>
-  <p id="permissionError" style="font-size:13px;color:red"></p>
+  <p>Scanner use karne ke liye camera permission allow karein.</p>
+  <button class="blue" onclick="startCamera()">
+  ALLOW CAMERA
+  </button>
+  <p id="permissionError" style="color:red;font-size:12px"></p>
  </div>
 </div>
 
 <script>
 
 const video=document.getElementById("video");
-const cropCanvas=document.getElementById("cropCanvas");
-const cropCtx=cropCanvas.getContext("2d");
-const outputCanvas=document.getElementById("outputCanvas");
-const outputCtx=outputCanvas.getContext("2d");
+const canvas=document.getElementById("imageCanvas");
+const ctx=canvas.getContext("2d");
 
 let stream=null;
-let originalCanvas=document.createElement("canvas");
-let startX=0,startY=0,endX=0,endY=0;
-let drawing=false,selection=null;
+let captured=false;
+let selection=null;
+let drawing=false;
+let startX=0,startY=0;
 
+// SAVED DATA
 let records=JSON.parse(
  localStorage.getItem("scannerData")||"[]"
 );
 
 // CAMERA START
 async function startCamera(){
+
  try{
+
+  if(!navigator.mediaDevices ||
+     !navigator.mediaDevices.getUserMedia){
+    throw new Error("HTTPS connection required");
+  }
+
   stream=await navigator.mediaDevices.getUserMedia({
-   video:{facingMode:{ideal:"environment"}},
+   video:{
+    facingMode:{ideal:"environment"},
+    width:{ideal:1920},
+    height:{ideal:1080}
+   },
    audio:false
   });
 
@@ -168,138 +260,204 @@ async function startCamera(){
   await video.play();
 
   document.getElementById("permission").classList.add("hidden");
-  document.getElementById("permissionError").innerText="";
-  document.getElementById("status").innerText="Camera started.";
+
+  document.getElementById("status").innerText="Camera ready.";
 
  }catch(error){
+
   document.getElementById("permissionError").innerText=
-   error.name+": "+error.message+
-   " | HTTPS aur browser camera permission check karein.";
+   error.name+": "+error.message;
+
  }
 }
 
 // CAMERA STOP
 function stopCamera(){
+
  if(stream){
   stream.getTracks().forEach(track=>track.stop());
   stream=null;
   video.srcObject=null;
  }
+
  document.getElementById("status").innerText="Camera stopped.";
 }
 
-// CAPTURE IMAGE
-function captureImage(){
+// CAPTURE ONLY VISIBLE FRAME
+function captureFrame(){
 
- if(!stream){
-  alert("Pehle camera start karein.");
+ if(!stream || !video.videoWidth){
+  alert("Camera start karein.");
   return;
  }
 
- if(!video.videoWidth){
-  alert("Camera ready hone ka wait karein.");
-  return;
+ const vw=video.videoWidth;
+ const vh=video.videoHeight;
+
+ const frame=document.querySelector(".camera-frame");
+ const frameRatio=frame.clientWidth/frame.clientHeight;
+ const videoRatio=vw/vh;
+
+ let sx=0,sy=0,sw=vw,sh=vh;
+
+ // Match exactly the video object-fit: cover preview
+ if(videoRatio>frameRatio){
+   sw=vh*frameRatio;
+   sx=(vw-sw)/2;
+ }else{
+   sh=vw/frameRatio;
+   sy=(vh-sh)/2;
  }
 
- originalCanvas.width=video.videoWidth;
- originalCanvas.height=video.videoHeight;
+ canvas.width=Math.round(sw);
+ canvas.height=Math.round(sh);
 
- originalCanvas.getContext("2d").drawImage(
-  video,0,0,originalCanvas.width,originalCanvas.height
+ ctx.drawImage(
+  video,
+  sx,sy,sw,sh,
+  0,0,canvas.width,canvas.height
  );
 
- cropCanvas.width=originalCanvas.width;
- cropCanvas.height=originalCanvas.height;
-
+ captured=true;
  selection=null;
- redrawCrop();
 
- document.getElementById("cropSection").style.display="block";
- document.getElementById("resultSection").style.display="none";
+ document.getElementById("cropSection").classList.remove("hidden");
+ document.getElementById("resultSection").classList.add("hidden");
+
  document.getElementById("status").innerText=
-  "Image captured. Ab area select karein.";
+  "Frame captured. Crop optional hai.";
+
 }
 
-// DRAW CROP SELECTION
-function redrawCrop(){
- cropCtx.clearRect(0,0,cropCanvas.width,cropCanvas.height);
- cropCtx.drawImage(originalCanvas,0,0);
+// DRAW SELECTION
+function drawImage(){
+
+ const saved=canvas.toDataURL();
+
+ if(!selection)return;
+
+ const x=Math.min(selection.x1,selection.x2);
+ const y=Math.min(selection.y1,selection.y2);
+ const w=Math.abs(selection.x2-selection.x1);
+ const h=Math.abs(selection.y2-selection.y1);
+
+ // Draw selection border
+ ctx.strokeStyle="#00dd66";
+ ctx.lineWidth=3;
+ ctx.strokeRect(x,y,w,h);
+}
+
+// GET POINTER POSITION
+function getPos(e){
+
+ const rect=canvas.getBoundingClientRect();
+
+ return{
+  x:(e.clientX-rect.left)*canvas.width/rect.width,
+  y:(e.clientY-rect.top)*canvas.height/rect.height
+ };
+
+}
+
+// CROP SELECTION
+canvas.addEventListener("pointerdown",e=>{
+
+ if(!captured)return;
+
+ e.preventDefault();
+ canvas.setPointerCapture(e.pointerId);
+
+ const p=getPos(e);
+
+ startX=p.x;
+ startY=p.y;
+
+ selection={
+  x1:startX,
+  y1:startY,
+  x2:startX,
+  y2:startY
+ };
+
+ drawing=true;
+ drawSelection();
+
+});
+
+canvas.addEventListener("pointermove",e=>{
+
+ if(!drawing)return;
+
+ const p=getPos(e);
+
+ selection.x2=p.x;
+ selection.y2=p.y;
+
+ drawSelection();
+
+});
+
+function finishCrop(e){
+
+ if(!drawing)return;
+
+ const p=getPos(e);
+ selection.x2=p.x;
+ selection.y2=p.y;
+
+ drawing=false;
+ drawSelection();
+
+}
+
+canvas.addEventListener("pointerup",finishCrop);
+canvas.addEventListener("pointercancel",()=>drawing=false);
+
+function drawSelection(){
+
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ ctx.drawImage(originalImage,0,0);
 
  if(selection){
+
   const x=Math.min(selection.x1,selection.x2);
   const y=Math.min(selection.y1,selection.y2);
   const w=Math.abs(selection.x2-selection.x1);
   const h=Math.abs(selection.y2-selection.y1);
 
-  cropCtx.fillStyle="rgba(0,0,0,0.35)";
-  cropCtx.fillRect(0,0,cropCanvas.width,cropCanvas.height);
+  ctx.fillStyle="rgba(0,0,0,0.4)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  cropCtx.clearRect(x,y,w,h);
-  cropCtx.drawImage(originalCanvas,x,y,w,h,x,y,w,h);
+  ctx.clearRect(x,y,w,h);
+  ctx.drawImage(originalImage,x,y,w,h,x,y,w,h);
 
-  cropCtx.strokeStyle="#00ff66";
-  cropCtx.lineWidth=Math.max(3,cropCanvas.width/400);
-  cropCtx.strokeRect(x,y,w,h);
+  ctx.strokeStyle="#00ee66";
+  ctx.lineWidth=3;
+  ctx.strokeRect(x,y,w,h);
+
  }
+
 }
 
-// POINTER POSITION
-function getPosition(e){
- const rect=cropCanvas.getBoundingClientRect();
+let originalImage=new Image();
 
- return {
-  x:(e.clientX-rect.left)*(cropCanvas.width/rect.width),
-  y:(e.clientY-rect.top)*(cropCanvas.height/rect.height)
+// STORE ORIGINAL FRAME FOR CROP
+function storeOriginal(){
+
+ originalImage=new Image();
+ originalImage.src=canvas.toDataURL();
+
+ originalImage.onload=()=>{
+  ctx.drawImage(originalImage,0,0);
  };
 }
 
-// MOUSE AND TOUCH SELECTION
-cropCanvas.addEventListener("pointerdown",e=>{
- e.preventDefault();
- cropCanvas.setPointerCapture(e.pointerId);
-
- const p=getPosition(e);
- startX=p.x;
- startY=p.y;
- endX=p.x;
- endY=p.y;
- drawing=true;
-
- selection={x1:startX,y1:startY,x2:endX,y2:endY};
- redrawCrop();
-});
-
-cropCanvas.addEventListener("pointermove",e=>{
- if(!drawing)return;
-
- const p=getPosition(e);
- endX=p.x;
- endY=p.y;
-
- selection={x1:startX,y1:startY,x2:endX,y2:endY};
- redrawCrop();
-});
-
-function finishSelection(e){
- if(!drawing)return;
- const p=getPosition(e);
- endX=p.x;
- endY=p.y;
- selection={x1:startX,y1:startY,x2:endX,y2:endY};
- drawing=false;
- redrawCrop();
-}
-
-cropCanvas.addEventListener("pointerup",finishSelection);
-cropCanvas.addEventListener("pointercancel",()=>{
- drawing=false;
-});
-
-// CROP IMAGE
-async function cropImage(){
+// CROP BUTTON
+async function useCrop(){
 
  if(!selection){
-  alert("Pehle image ka area select karein.");
+  alert("Pehle required area select karein.");
   return;
  }
 
@@ -308,31 +466,49 @@ async function cropImage(){
  const w=Math.round(Math.abs(selection.x2-selection.x1));
  const h=Math.round(Math.abs(selection.y2-selection.y1));
 
- if(w<10||h<10){
-  alert("Thoda bada area select karein.");
+ if(w<10 || h<10){
+  alert("Bada area select karein.");
   return;
  }
 
- outputCanvas.width=w;
- outputCanvas.height=h;
+ const temp=document.createElement("canvas");
+ temp.width=w;
+ temp.height=h;
 
- outputCtx.drawImage(originalCanvas,x,y,w,h,0,0,w,h);
+ temp.getContext("2d").drawImage(
+  originalImage,x,y,w,h,0,0,w,h
+ );
 
- document.getElementById("resultSection").style.display="block";
- document.getElementById("textData").value="";
+ await readText(temp);
+
+}
+
+// USE FULL FRAME
+async function useFullImage(){
+
+ await readText(originalImage);
+
+}
+
+// OCR
+async function readText(source){
+
+ document.getElementById("resultSection").classList.remove("hidden");
+
  document.getElementById("status").innerText="Reading text...";
 
- // OCR
+ document.getElementById("textData").value="";
+
  try{
 
   const result=await Tesseract.recognize(
-   outputCanvas,
+   source,
    "eng",
    {
     logger:m=>{
      if(m.status==="recognizing text"){
       document.getElementById("status").innerText=
-       "Reading text: "+Math.round(m.progress*100)+"%";
+       "Scanning: "+Math.round(m.progress*100)+"%";
      }
     }
    }
@@ -342,12 +518,14 @@ async function cropImage(){
    result.data.text.trim();
 
   document.getElementById("status").innerText=
-   "Text scan complete. Please check the result.";
+   "Scan complete. Check and submit.";
 
  }catch(error){
-  document.getElementById("status").innerText=
-   "OCR failed. Internet connection check karein.";
+
+  document.getElementById("status").innerText="OCR failed.";
+
  }
+
 }
 
 // SAVE DATA
@@ -356,7 +534,7 @@ function saveData(){
  const text=document.getElementById("textData").value.trim();
 
  if(!text){
-  alert("No text available.");
+  alert("Please scan or enter text.");
   return;
  }
 
@@ -368,12 +546,14 @@ function saveData(){
  localStorage.setItem("scannerData",JSON.stringify(records));
 
  document.getElementById("textData").value="";
- document.getElementById("status").innerText="Data saved successfully.";
+
+ document.getElementById("status").innerText="Data saved!";
 
  showRecords();
+
 }
 
-// SHOW RECORDS
+// SHOW DATA
 function showRecords(){
 
  document.getElementById("total").innerText=
@@ -390,29 +570,33 @@ function showRecords(){
   const content=document.createElement("div");
   content.textContent=(index+1)+". "+item.Text+
    "\n"+item.Date;
-  content.style.whiteSpace="pre-wrap";
 
   const del=document.createElement("button");
   del.className="red";
   del.textContent="DELETE";
+
   del.onclick=()=>{
+
    if(confirm("Delete this record?")){
     records.splice(index,1);
     localStorage.setItem("scannerData",JSON.stringify(records));
     showRecords();
    }
+
   };
 
   div.append(content,del);
   box.appendChild(div);
+
  });
+
 }
 
-// EXCEL DOWNLOAD
+// DOWNLOAD EXCEL
 function downloadExcel(){
 
  if(!records.length){
-  alert("No data available.");
+  alert("No records found.");
   return;
  }
 
@@ -427,10 +611,21 @@ function downloadExcel(){
 
  XLSX.utils.book_append_sheet(book,sheet,"Scanner Data");
 
- XLSX.writeFile(book,"Scanned_Data.xlsx");
+ XLSX.writeFile(book,"Scanner_Data.xlsx");
+
 }
 
+// INITIALIZE
 showRecords();
+
+// Save the captured frame as original before crop editing
+const oldCapture=captureFrame;
+captureFrame=function(){
+ oldCapture();
+ if(captured){
+  storeOriginal();
+ }
+};
 
 </script>
 
