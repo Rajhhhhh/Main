@@ -13,57 +13,25 @@
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  padding:15px;
-  background:#f1f4f8;
-  font-family:Arial,sans-serif;
-  color:#222;
+ margin:0;padding:15px;
+ background:#f1f4f8;
+ font-family:Arial,sans-serif;color:#222;
 }
 
 .app{
-  max-width:600px;
-  margin:auto;
-  background:white;
-  padding:18px;
-  border-radius:12px;
-  box-shadow:0 3px 15px #0001;
+ max-width:650px;margin:auto;background:white;
+ padding:18px;border-radius:12px;
+ box-shadow:0 3px 15px #0001;
 }
 
 h2{text-align:center;color:#174477}
 
-.camera-frame{
-  width:100%;
-  aspect-ratio:4/1;
-  overflow:hidden;
-  border:3px solid #16864a;
-  border-radius:8px;
-  background:#111;
-  position:relative;
-}
-
-video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
-.frame-label{
-  text-align:center;
-  font-size:12px;
-  color:#16864a;
-  margin:7px;
-}
+h3{color:#174477}
 
 button{
-  width:100%;
-  padding:13px;
-  margin:5px 0;
-  border:0;
-  border-radius:7px;
-  font-size:15px;
-  color:white;
-  cursor:pointer;
+ width:100%;padding:13px;margin:5px 0;
+ border:0;border-radius:7px;
+ font-size:15px;color:white;cursor:pointer;
 }
 
 .blue{background:#1769aa}
@@ -72,61 +40,97 @@ button{
 .red{background:#d93636}
 .gray{background:#555}
 
+input,textarea{
+ width:100%;padding:12px;
+ border:1px solid #ccc;border-radius:7px;
+ font-size:15px;margin:5px 0;
+}
+
+textarea{min-height:120px;resize:vertical}
+
+.section{margin-top:20px}
+
+.camera-frame{
+ width:100%;aspect-ratio:4/1;
+ overflow:hidden;border:3px solid #16864a;
+ border-radius:8px;background:#111;
+}
+
+video{width:100%;height:100%;object-fit:cover}
+
+.frame-label{
+ text-align:center;font-size:12px;
+ color:#16864a;margin:7px;
+}
+
 canvas{
-  max-width:100%;
-  height:auto;
-  display:block;
-  border:1px solid #ccc;
-  border-radius:6px;
-  touch-action:none;
+ max-width:100%;height:auto;
+ display:block;border:1px solid #ccc;
+ border-radius:6px;touch-action:none;
 }
 
-textarea{
-  width:100%;
-  min-height:120px;
-  padding:12px;
-  font-size:17px;
-  border:1px solid #ccc;
-  border-radius:7px;
-  resize:vertical;
-}
-
-.section{margin-top:18px}
 .status{
-  color:#1769aa;
-  font-size:13px;
-  text-align:center;
-  min-height:18px;
-}
-
-#permission{
-  position:fixed;
-  inset:0;
-  z-index:10;
-  background:#0009;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-}
-
-.popup{
-  background:white;
-  padding:25px;
-  border-radius:12px;
-  max-width:350px;
-  width:100%;
-  text-align:center;
+ color:#1769aa;font-size:13px;
+ text-align:center;min-height:18px;
 }
 
 .hidden{display:none!important}
 
 .record{
-  padding:12px;
-  border-bottom:1px solid #ddd;
-  overflow-wrap:anywhere;
-  white-space:pre-wrap;
+ padding:12px;border-bottom:1px solid #ddd;
+ overflow-wrap:anywhere;
 }
+
+.record-line{
+ padding:7px;margin:4px 0;
+ border-radius:5px;
+ background:#f3f5f7;
+ white-space:pre-wrap;
+}
+
+.duplicate-line{
+ background:#ffe1e1;
+ border:1px solid #e53939;
+ color:#b00020;
+ font-weight:bold;
+}
+
+.new-line{
+ background:#e1f5e9;
+ border:1px solid #16864a;
+ color:#116b37;
+}
+
+.tag{
+ display:inline-block;padding:3px 7px;
+ border-radius:4px;font-size:11px;
+ margin-left:5px;
+}
+
+.tag-duplicate{background:#d93636;color:white}
+.tag-new{background:#16864a;color:white}
+
+#popup{
+ position:fixed;inset:0;
+ background:#0009;z-index:100;
+ display:flex;align-items:center;
+ justify-content:center;padding:20px;
+}
+
+.popup-box{
+ background:white;padding:25px;
+ border-radius:12px;width:100%;
+ max-width:350px;text-align:center;
+}
+
+.popup-box h3{color:#d93636}
+
+.master-count{
+ background:#e8f2ff;padding:10px;
+ border-radius:6px;font-size:14px;
+}
+
+.small{font-size:12px;color:#666}
 </style>
 </head>
 
@@ -136,13 +140,60 @@ textarea{
 
 <h2>SMART LINE SCANNER</h2>
 
-<!-- LIVE CAMERA FRAME -->
+<!-- MASTER DATA -->
+<div class="section">
+
+<h3>1. Master Data</h3>
+
+<p class="small">
+Yahan pehle se saved data rakhein. Har line ko alag record maana jayega.
+</p>
+
+<textarea id="masterData"
+placeholder="9876543210&#10;9876543211&#10;9876543212"></textarea>
+
+<button class="green" onclick="saveMasterData()">
+SAVE MASTER DATA
+</button>
+
+<div class="master-count" id="masterCount">
+Master Records: 0
+</div>
+
+<hr>
+
+<h3>Google Sheet Connection</h3>
+
+<input id="sheetUrl"
+placeholder="Google Sheet URL paste karein">
+
+<button class="blue" onclick="copySheetLink()">
+COPY SHEET LINK
+</button>
+
+<button class="orange" onclick="loadGoogleSheet()">
+LOAD GOOGLE SHEET DATA
+</button>
+
+<p class="small">
+Google Sheet public/published honi chahiye. Sheet mein data ek column mein rakhein.
+</p>
+
+</div>
+
+<hr>
+
+<!-- CAMERA -->
+<div class="section">
+
+<h3>2. Camera Scanner</h3>
+
 <div class="camera-frame">
-  <video id="video" autoplay playsinline muted></video>
+<video id="video" autoplay playsinline muted></video>
 </div>
 
 <div class="frame-label">
-  Place required text inside this green frame
+Place required text inside green frame
 </div>
 
 <button class="blue" onclick="startCamera()">
@@ -157,15 +208,20 @@ CAPTURE IMAGE
 STOP CAMERA
 </button>
 
-<p class="status" id="status">Camera permission required.</p>
+<p class="status" id="status">
+Camera permission required.
+</p>
 
-<!-- CAPTURED IMAGE -->
+</div>
+
+<!-- IMAGE CROP -->
 <div id="cropSection" class="section hidden">
 
-<h3>Captured Image</h3>
+<h3>3. Captured Image</h3>
 
-<p style="font-size:13px;color:#666">
-Crop karna optional hai. Agar poori strip chahiye to bina crop kiye scan karein.
+<p class="small">
+Image par finger se area select karein.
+Crop optional hai.
 </p>
 
 <canvas id="imageCanvas"></canvas>
@@ -180,10 +236,10 @@ USE FULL FRAME
 
 </div>
 
-<!-- TEXT RESULT -->
+<!-- OCR RESULT -->
 <div id="resultSection" class="section hidden">
 
-<h3>Scanned Text</h3>
+<h3>4. Scanned Text</h3>
 
 <textarea id="textData"
 placeholder="Scanned text yahan aayega..."></textarea>
@@ -196,7 +252,10 @@ SUBMIT / SAVE
 
 <hr>
 
-<h3>Saved Records</h3>
+<!-- SAVED RECORDS -->
+<div class="section">
+
+<h3>5. Saved Records</h3>
 
 <div id="total">Total Records: 0</div>
 
@@ -204,20 +263,38 @@ SUBMIT / SAVE
 DOWNLOAD EXCEL
 </button>
 
+<button class="red" onclick="clearRecords()">
+CLEAR ALL SCANNED RECORDS
+</button>
+
 <div id="records"></div>
 
 </div>
 
-<!-- PERMISSION POPUP -->
-<div id="permission">
- <div class="popup">
-  <h3>Camera Permission</h3>
-  <p>Scanner use karne ke liye camera permission allow karein.</p>
-  <button class="blue" onclick="startCamera()">
-  ALLOW CAMERA
-  </button>
-  <p id="permissionError" style="color:red;font-size:12px"></p>
- </div>
+</div>
+
+<!-- DUPLICATE POPUP -->
+<div id="popup" class="hidden">
+
+<div class="popup-box">
+
+<h3>⚠ DUPLICATE DATA FOUND!</h3>
+
+<p id="popupMessage">
+Duplicate data found.
+</p>
+
+<div id="popupDuplicates"
+style="background:#ffe1e1;padding:10px;border-radius:6px;
+font-weight:bold;overflow-wrap:anywhere">
+</div>
+
+<button class="blue" onclick="closePopup()">
+OK
+</button>
+
+</div>
+
 </div>
 
 <script>
@@ -230,12 +307,177 @@ let stream=null;
 let captured=false;
 let selection=null;
 let drawing=false;
-let startX=0,startY=0;
+let originalImage=new Image();
+let originalReady=false;
 
-// SAVED DATA
 let records=JSON.parse(
  localStorage.getItem("scannerData")||"[]"
 );
+
+let masterData=JSON.parse(
+ localStorage.getItem("masterData")||"[]"
+);
+
+// NORMALIZE DATA
+function normalize(value){
+
+ return String(value)
+ .toUpperCase()
+ .replace(/[^A-Z0-9]/g,"")
+ .trim();
+
+}
+
+// MASTER DATA SAVE
+function saveMasterData(){
+
+ const text=document.getElementById("masterData").value;
+
+ masterData=text.split(/\r?\n/)
+ .map(x=>x.trim())
+ .filter(x=>normalize(x)!=="");
+
+ masterData=[...new Set(masterData.map(normalize))];
+
+ localStorage.setItem(
+  "masterData",JSON.stringify(masterData)
+ );
+
+ updateMasterCount();
+
+ alert("Master Data Saved Successfully!");
+
+}
+
+// MASTER COUNT
+function updateMasterCount(){
+
+ document.getElementById("masterCount").innerText=
+ "Master Records: "+masterData.length;
+
+}
+
+// LOAD MASTER DATA
+function initializeMaster(){
+
+ document.getElementById("masterData").value=
+ masterData.join("\n");
+
+ updateMasterCount();
+
+}
+
+// COPY GOOGLE SHEET LINK
+async function copySheetLink(){
+
+ const url=document.getElementById("sheetUrl").value.trim();
+
+ if(!url){
+  alert("Pehle Google Sheet URL enter karein.");
+  return;
+ }
+
+ try{
+  await navigator.clipboard.writeText(url);
+  alert("Sheet link copied!");
+ }catch(e){
+  alert("Link copy nahi hua.");
+ }
+
+}
+
+// CONVERT GOOGLE SHEET LINK TO CSV URL
+function getCSVUrl(url){
+
+ try{
+
+  const match=url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+
+  if(!match) return url;
+
+  const id=match[1];
+
+  const gidMatch=url.match(/[?&#]gid=([0-9]+)/);
+  const gid=gidMatch?gidMatch[1]:"0";
+
+  return "https://docs.google.com/spreadsheets/d/"+
+  id+"/export?format=csv&gid="+gid;
+
+ }catch(e){
+
+  return url;
+
+ }
+
+}
+
+// LOAD GOOGLE SHEET
+async function loadGoogleSheet(){
+
+ const url=document.getElementById("sheetUrl").value.trim();
+
+ if(!url){
+  alert("Google Sheet URL enter karein.");
+  return;
+ }
+
+ document.getElementById("status").innerText=
+ "Loading Google Sheet...";
+
+ try{
+
+  const csvUrl=getCSVUrl(url);
+
+  const response=await fetch(csvUrl);
+
+  if(!response.ok){
+   throw new Error("Sheet access nahi mila.");
+  }
+
+  const csv=await response.text();
+
+  const workbook=XLSX.read(csv,{type:"string"});
+
+  const sheet=workbook.Sheets[workbook.SheetNames[0]];
+
+  const rows=XLSX.utils.sheet_to_json(
+   sheet,{header:1,defval:""}
+  );
+
+  const values=rows.flat()
+  .map(x=>String(x).trim())
+  .filter(x=>normalize(x)!=="");
+
+  masterData=[
+   ...new Set(values.map(normalize))
+  ];
+
+  localStorage.setItem(
+   "masterData",JSON.stringify(masterData)
+  );
+
+  document.getElementById("masterData").value=
+   masterData.join("\n");
+
+  updateMasterCount();
+
+  document.getElementById("status").innerText=
+   "Google Sheet data loaded successfully.";
+
+  alert("Google Sheet Data Loaded!\nTotal: "+masterData.length);
+
+ }catch(error){
+
+  document.getElementById("status").innerText=
+   "Google Sheet loading failed.";
+
+  alert("Sheet load nahi hui.\n"+
+  "Check karein ki sheet public/published hai.\n"+
+  error.message);
+
+ }
+
+}
 
 // CAMERA START
 async function startCamera(){
@@ -244,69 +486,84 @@ async function startCamera(){
 
   if(!navigator.mediaDevices ||
      !navigator.mediaDevices.getUserMedia){
-    throw new Error("HTTPS connection required");
+
+   throw new Error("HTTPS connection required");
+
   }
 
   stream=await navigator.mediaDevices.getUserMedia({
+
    video:{
     facingMode:{ideal:"environment"},
     width:{ideal:1920},
     height:{ideal:1080}
    },
+
    audio:false
+
   });
 
   video.srcObject=stream;
   await video.play();
 
-  document.getElementById("permission").classList.add("hidden");
-
-  document.getElementById("status").innerText="Camera ready.";
+  document.getElementById("status").innerText=
+   "Camera ready.";
 
  }catch(error){
 
-  document.getElementById("permissionError").innerText=
-   error.name+": "+error.message;
+  alert(error.name+": "+error.message);
 
  }
+
 }
 
 // CAMERA STOP
 function stopCamera(){
 
  if(stream){
+
   stream.getTracks().forEach(track=>track.stop());
+
   stream=null;
   video.srcObject=null;
+
  }
 
- document.getElementById("status").innerText="Camera stopped.";
+ document.getElementById("status").innerText=
+ "Camera stopped.";
+
 }
 
-// CAPTURE ONLY VISIBLE FRAME
+// CAPTURE IMAGE
 function captureFrame(){
 
  if(!stream || !video.videoWidth){
+
   alert("Camera start karein.");
   return;
+
  }
 
  const vw=video.videoWidth;
  const vh=video.videoHeight;
 
  const frame=document.querySelector(".camera-frame");
+
  const frameRatio=frame.clientWidth/frame.clientHeight;
  const videoRatio=vw/vh;
 
  let sx=0,sy=0,sw=vw,sh=vh;
 
- // Match exactly the video object-fit: cover preview
  if(videoRatio>frameRatio){
-   sw=vh*frameRatio;
-   sx=(vw-sw)/2;
+
+  sw=vh*frameRatio;
+  sx=(vw-sw)/2;
+
  }else{
-   sh=vw/frameRatio;
-   sy=(vh-sh)/2;
+
+  sh=vw/frameRatio;
+  sy=(vh-sh)/2;
+
  }
 
  canvas.width=Math.round(sw);
@@ -318,36 +575,66 @@ function captureFrame(){
   0,0,canvas.width,canvas.height
  );
 
+ // SAVE ORIGINAL IMAGE SEPARATELY
+ originalImage=new Image();
+ originalReady=false;
+
+ originalImage.onload=()=>{
+
+  originalReady=true;
+  drawSelection();
+
+ };
+
+ originalImage.src=canvas.toDataURL("image/png");
+
  captured=true;
  selection=null;
 
- document.getElementById("cropSection").classList.remove("hidden");
- document.getElementById("resultSection").classList.add("hidden");
+ document.getElementById("cropSection")
+ .classList.remove("hidden");
+
+ document.getElementById("resultSection")
+ .classList.add("hidden");
 
  document.getElementById("status").innerText=
-  "Frame captured. Crop optional hai.";
+ "Image captured. Select crop or use full frame.";
 
 }
 
-// DRAW SELECTION
-function drawImage(){
+// DRAW IMAGE AND SELECTION
+function drawSelection(){
 
- const saved=canvas.toDataURL();
+ if(!originalReady)return;
+
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ ctx.drawImage(originalImage,0,0);
 
  if(!selection)return;
 
  const x=Math.min(selection.x1,selection.x2);
  const y=Math.min(selection.y1,selection.y2);
+
  const w=Math.abs(selection.x2-selection.x1);
  const h=Math.abs(selection.y2-selection.y1);
 
- // Draw selection border
- ctx.strokeStyle="#00dd66";
+ ctx.fillStyle="rgba(0,0,0,0.45)";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ ctx.clearRect(x,y,w,h);
+
+ ctx.drawImage(
+  originalImage,x,y,w,h,x,y,w,h
+ );
+
+ ctx.strokeStyle="#00ee66";
  ctx.lineWidth=3;
  ctx.strokeRect(x,y,w,h);
+
 }
 
-// GET POINTER POSITION
+// POINTER POSITION
 function getPos(e){
 
  const rect=canvas.getBoundingClientRect();
@@ -359,27 +646,24 @@ function getPos(e){
 
 }
 
-// CROP SELECTION
+// SELECT CROP
 canvas.addEventListener("pointerdown",e=>{
 
- if(!captured)return;
+ if(!captured || !originalReady)return;
 
  e.preventDefault();
+
  canvas.setPointerCapture(e.pointerId);
 
  const p=getPos(e);
 
- startX=p.x;
- startY=p.y;
-
  selection={
-  x1:startX,
-  y1:startY,
-  x2:startX,
-  y2:startY
+  x1:p.x,y1:p.y,
+  x2:p.x,y2:p.y
  };
 
  drawing=true;
+
  drawSelection();
 
 });
@@ -402,76 +686,46 @@ function finishCrop(e){
  if(!drawing)return;
 
  const p=getPos(e);
+
  selection.x2=p.x;
  selection.y2=p.y;
 
  drawing=false;
+
  drawSelection();
 
 }
 
 canvas.addEventListener("pointerup",finishCrop);
-canvas.addEventListener("pointercancel",()=>drawing=false);
+canvas.addEventListener("pointercancel",()=>{
+ drawing=false;
+});
 
-function drawSelection(){
-
- ctx.clearRect(0,0,canvas.width,canvas.height);
-
- ctx.drawImage(originalImage,0,0);
-
- if(selection){
-
-  const x=Math.min(selection.x1,selection.x2);
-  const y=Math.min(selection.y1,selection.y2);
-  const w=Math.abs(selection.x2-selection.x1);
-  const h=Math.abs(selection.y2-selection.y1);
-
-  ctx.fillStyle="rgba(0,0,0,0.4)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  ctx.clearRect(x,y,w,h);
-  ctx.drawImage(originalImage,x,y,w,h,x,y,w,h);
-
-  ctx.strokeStyle="#00ee66";
-  ctx.lineWidth=3;
-  ctx.strokeRect(x,y,w,h);
-
- }
-
-}
-
-let originalImage=new Image();
-
-// STORE ORIGINAL FRAME FOR CROP
-function storeOriginal(){
-
- originalImage=new Image();
- originalImage.src=canvas.toDataURL();
-
- originalImage.onload=()=>{
-  ctx.drawImage(originalImage,0,0);
- };
-}
-
-// CROP BUTTON
+// USE CROP
 async function useCrop(){
 
- if(!selection){
-  alert("Pehle required area select karein.");
+ if(!selection || !originalReady){
+
+  alert("Pehle crop area select karein.");
   return;
+
  }
 
  const x=Math.round(Math.min(selection.x1,selection.x2));
  const y=Math.round(Math.min(selection.y1,selection.y2));
+
  const w=Math.round(Math.abs(selection.x2-selection.x1));
  const h=Math.round(Math.abs(selection.y2-selection.y1));
 
  if(w<10 || h<10){
+
   alert("Bada area select karein.");
   return;
+
  }
 
  const temp=document.createElement("canvas");
+
  temp.width=w;
  temp.height=h;
 
@@ -483,8 +737,15 @@ async function useCrop(){
 
 }
 
-// USE FULL FRAME
+// USE FULL IMAGE
 async function useFullImage(){
+
+ if(!originalReady){
+
+  alert("Image ready nahi hai.");
+  return;
+
+ }
 
  await readText(originalImage);
 
@@ -493,9 +754,11 @@ async function useFullImage(){
 // OCR
 async function readText(source){
 
- document.getElementById("resultSection").classList.remove("hidden");
+ document.getElementById("resultSection")
+ .classList.remove("hidden");
 
- document.getElementById("status").innerText="Reading text...";
+ document.getElementById("status").innerText=
+ "Reading text...";
 
  document.getElementById("textData").value="";
 
@@ -506,10 +769,14 @@ async function readText(source){
    "eng",
    {
     logger:m=>{
+
      if(m.status==="recognizing text"){
+
       document.getElementById("status").innerText=
        "Scanning: "+Math.round(m.progress*100)+"%";
+
      }
+
     }
    }
   );
@@ -522,44 +789,130 @@ async function readText(source){
 
  }catch(error){
 
-  document.getElementById("status").innerText="OCR failed.";
+  document.getElementById("status").innerText=
+   "OCR failed: "+error.message;
 
  }
 
 }
 
-// SAVE DATA
+// CHECK DUPLICATES
+function checkDuplicates(text){
+
+ const lines=text.split(/\r?\n/)
+ .map(x=>x.trim())
+ .filter(x=>normalize(x)!=="");
+
+ const masterSet=new Set(masterData);
+
+ return lines.map(line=>({
+
+  text:line,
+  duplicate:masterSet.has(normalize(line))
+
+ }));
+
+}
+
+// SAVE SCANNED DATA
 function saveData(){
 
  const text=document.getElementById("textData").value.trim();
 
  if(!text){
+
   alert("Please scan or enter text.");
   return;
+
  }
 
- records.push({
-  Text:text,
-  Date:new Date().toLocaleString("en-IN")
- });
+ const checked=checkDuplicates(text);
 
- localStorage.setItem("scannerData",JSON.stringify(records));
+ const duplicates=checked.filter(x=>x.duplicate);
+
+ const newRecord={
+
+  Text:text,
+  Date:new Date().toLocaleString("en-IN"),
+  Lines:checked,
+  HasDuplicate:duplicates.length>0
+
+ };
+
+ // SAVE ALL DATA, INCLUDING DUPLICATES
+ records.push(newRecord);
+
+ localStorage.setItem(
+  "scannerData",JSON.stringify(records)
+ );
 
  document.getElementById("textData").value="";
 
- document.getElementById("status").innerText="Data saved!";
+ if(duplicates.length>0){
 
- showRecords();
+  showDuplicatePopup(duplicates);
+
+ }else{
+
+  document.getElementById("status").innerText=
+   "New data saved successfully.";
+
+  showRecords();
+
+ }
 
 }
 
-// SHOW DATA
+// DUPLICATE POPUP
+function showDuplicatePopup(duplicates){
+
+ const box=document.getElementById("popupDuplicates");
+
+ box.innerHTML="";
+
+ duplicates.forEach(item=>{
+
+  const div=document.createElement("div");
+
+  div.textContent=item.text;
+  div.style.padding="5px";
+
+  box.appendChild(div);
+
+ });
+
+ document.getElementById("popupMessage").innerText=
+ duplicates.length+" duplicate record(s) found!";
+
+ document.getElementById("popup").classList.remove("hidden");
+
+}
+
+// OK BUTTON
+function closePopup(){
+
+ document.getElementById("popup").classList.add("hidden");
+
+ // SHOW SAVED DATA AFTER OK
+ showRecords();
+
+ document.getElementById("status").innerText=
+ "Duplicate data saved and highlighted.";
+
+ document.getElementById("records").scrollIntoView({
+  behavior:"smooth"
+ });
+
+}
+
+// SHOW RECORDS
 function showRecords(){
 
  document.getElementById("total").innerText=
-  "Total Records: "+records.length;
+ "Total Records: "+records.length;
 
  const box=document.getElementById("records");
+
  box.innerHTML="";
 
  records.forEach((item,index)=>{
@@ -567,28 +920,86 @@ function showRecords(){
   const div=document.createElement("div");
   div.className="record";
 
-  const content=document.createElement("div");
-  content.textContent=(index+1)+". "+item.Text+
-   "\n"+item.Date;
+  const heading=document.createElement("b");
+
+  heading.textContent=
+   "Record "+(index+1)+" - "+item.Date;
+
+  div.appendChild(heading);
+
+  let lines=item.Lines;
+
+  // SUPPORT OLD SAVED RECORDS
+  if(!lines){
+
+   lines=checkDuplicates(item.Text);
+
+  }
+
+  lines.forEach(line=>{
+
+   const row=document.createElement("div");
+
+   row.className="record-line "+
+    (line.duplicate?"duplicate-line":"new-line");
+
+   row.textContent=line.text;
+
+   const tag=document.createElement("span");
+
+   tag.className="tag "+
+    (line.duplicate?"tag-duplicate":"tag-new");
+
+   tag.textContent=
+    line.duplicate?"DUPLICATE":"NEW";
+
+   row.appendChild(tag);
+
+   div.appendChild(row);
+
+  });
 
   const del=document.createElement("button");
+
   del.className="red";
   del.textContent="DELETE";
 
   del.onclick=()=>{
 
    if(confirm("Delete this record?")){
+
     records.splice(index,1);
-    localStorage.setItem("scannerData",JSON.stringify(records));
+
+    localStorage.setItem(
+     "scannerData",JSON.stringify(records)
+    );
+
     showRecords();
+
    }
 
   };
 
-  div.append(content,del);
+  div.appendChild(del);
+
   box.appendChild(div);
 
  });
+
+}
+
+// CLEAR ALL RECORDS
+function clearRecords(){
+
+ if(!confirm("Delete all scanned records?"))return;
+
+ records=[];
+
+ localStorage.setItem(
+  "scannerData",JSON.stringify(records)
+ );
+
+ showRecords();
 
 }
 
@@ -596,36 +1007,48 @@ function showRecords(){
 function downloadExcel(){
 
  if(!records.length){
+
   alert("No records found.");
   return;
+
  }
 
- const data=records.map((item,index)=>({
-  "Sr No":index+1,
-  "Scanned Text":item.Text,
-  "Date":item.Date
- }));
+ const data=[];
+
+ records.forEach((item,index)=>{
+
+  let lines=item.Lines || checkDuplicates(item.Text);
+
+  lines.forEach(line=>{
+
+   data.push({
+
+    "Record No":index+1,
+    "Scanned Text":line.text,
+    "Status":line.duplicate?"DUPLICATE":"NEW",
+    "Date":item.Date
+
+   });
+
+  });
+
+ });
 
  const sheet=XLSX.utils.json_to_sheet(data);
+
  const book=XLSX.utils.book_new();
 
- XLSX.utils.book_append_sheet(book,sheet,"Scanner Data");
+ XLSX.utils.book_append_sheet(
+  book,sheet,"Scanner Data"
+ );
 
  XLSX.writeFile(book,"Scanner_Data.xlsx");
 
 }
 
 // INITIALIZE
+initializeMaster();
 showRecords();
-
-// Save the captured frame as original before crop editing
-const oldCapture=captureFrame;
-captureFrame=function(){
- oldCapture();
- if(captured){
-  storeOriginal();
- }
-};
 
 </script>
 
