@@ -13,25 +13,21 @@
 *{box-sizing:border-box}
 
 body{
- margin:0;padding:15px;
+ margin:0;
  background:#f1f4f8;
- font-family:Arial,sans-serif;color:#222;
+ font-family:Arial,sans-serif;
+ color:#222;
 }
-
-.app{
- max-width:650px;margin:auto;background:white;
- padding:18px;border-radius:12px;
- box-shadow:0 3px 15px #0001;
-}
-
-h2{text-align:center;color:#174477}
-
-h3{color:#174477}
 
 button{
- width:100%;padding:13px;margin:5px 0;
- border:0;border-radius:7px;
- font-size:15px;color:white;cursor:pointer;
+ width:100%;
+ padding:13px;
+ margin:5px 0;
+ border:0;
+ border-radius:7px;
+ font-size:15px;
+ color:white;
+ cursor:pointer;
 }
 
 .blue{background:#1769aa}
@@ -41,51 +37,165 @@ button{
 .gray{background:#555}
 
 input,textarea{
- width:100%;padding:12px;
- border:1px solid #ccc;border-radius:7px;
- font-size:15px;margin:5px 0;
+ width:100%;
+ padding:12px;
+ border:1px solid #ccc;
+ border-radius:7px;
+ font-size:15px;
+ margin:5px 0;
 }
 
-textarea{min-height:120px;resize:vertical}
+textarea{
+ min-height:130px;
+ resize:vertical;
+}
 
-.section{margin-top:20px}
+.page{
+ min-height:100vh;
+ min-height:100dvh;
+ padding:18px;
+ display:none;
+ background:#f1f4f8;
+}
+
+.page.active{display:block}
+
+.container{
+ max-width:700px;
+ margin:auto;
+ background:white;
+ padding:18px;
+ border-radius:12px;
+ box-shadow:0 3px 15px #0001;
+}
+
+h2{text-align:center;color:#174477}
+h3{color:#174477}
+
+.header{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-bottom:18px;
+}
+
+.header h2{
+ flex:1;
+ margin:0;
+}
+
+.home-btn{
+ width:auto;
+ min-width:85px;
+ padding:10px 15px;
+ margin:0;
+ background:#555;
+}
+
+.home-title{
+ text-align:center;
+ margin:45px 0 30px;
+}
+
+.home-title h1{
+ color:#174477;
+ font-size:28px;
+}
+
+.home-title p{color:#777}
+
+.dashboard{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:15px;
+}
+
+.menu-box{
+ min-height:180px;
+ border-radius:14px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ color:white;
+ cursor:pointer;
+ text-align:center;
+ padding:15px;
+ box-shadow:0 4px 12px #0002;
+ transition:.2s;
+}
+
+.menu-box:active{transform:scale(.97)}
+
+.menu-box .symbol{
+ font-size:45px;
+ margin-bottom:12px;
+}
+
+.menu-box h3{
+ color:white;
+ margin:5px 0;
+}
+
+.menu-box p{
+ font-size:12px;
+ margin:5px 0;
+ color:white;
+}
+
+.menu1{background:#1769aa}
+.menu2{background:#16864a}
+.menu3{background:#dc8819}
+
+.status{
+ color:#1769aa;
+ font-size:13px;
+ text-align:center;
+ min-height:20px;
+ margin:10px 0;
+}
 
 .camera-frame{
- width:100%;aspect-ratio:4/1;
- overflow:hidden;border:3px solid #16864a;
- border-radius:8px;background:#111;
+ width:100%;
+ aspect-ratio:4/1;
+ overflow:hidden;
+ border:3px solid #16864a;
+ border-radius:8px;
+ background:#111;
 }
 
-video{width:100%;height:100%;object-fit:cover}
-
-.frame-label{
- text-align:center;font-size:12px;
- color:#16864a;margin:7px;
+video{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
 }
 
 canvas{
- max-width:100%;height:auto;
- display:block;border:1px solid #ccc;
- border-radius:6px;touch-action:none;
+ max-width:100%;
+ height:auto;
+ display:block;
+ border:1px solid #ccc;
+ border-radius:6px;
+ touch-action:none;
+ margin:10px auto;
 }
 
-.status{
- color:#1769aa;font-size:13px;
- text-align:center;min-height:18px;
-}
-
-.hidden{display:none!important}
+.section{margin-top:20px}
 
 .record{
- padding:12px;border-bottom:1px solid #ddd;
+ padding:12px;
+ border-bottom:1px solid #ddd;
  overflow-wrap:anywhere;
 }
 
 .record-line{
- padding:7px;margin:4px 0;
+ padding:8px;
+ margin:5px 0;
  border-radius:5px;
  background:#f3f5f7;
  white-space:pre-wrap;
+ overflow-wrap:anywhere;
 }
 
 .duplicate-line{
@@ -102,55 +212,140 @@ canvas{
 }
 
 .tag{
- display:inline-block;padding:3px 7px;
- border-radius:4px;font-size:11px;
+ display:inline-block;
+ padding:4px 7px;
+ border-radius:4px;
+ font-size:11px;
  margin-left:5px;
 }
 
 .tag-duplicate{background:#d93636;color:white}
 .tag-new{background:#16864a;color:white}
 
+.master-count{
+ background:#e8f2ff;
+ padding:10px;
+ border-radius:6px;
+ margin:10px 0;
+}
+
+.small{font-size:12px;color:#666}
+
 #popup{
- position:fixed;inset:0;
- background:#0009;z-index:100;
- display:flex;align-items:center;
- justify-content:center;padding:20px;
+ position:fixed;
+ inset:0;
+ background:#0009;
+ z-index:100;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
 }
 
 .popup-box{
- background:white;padding:25px;
- border-radius:12px;width:100%;
- max-width:350px;text-align:center;
+ background:white;
+ padding:25px;
+ border-radius:12px;
+ width:100%;
+ max-width:350px;
+ text-align:center;
 }
 
 .popup-box h3{color:#d93636}
 
-.master-count{
- background:#e8f2ff;padding:10px;
- border-radius:6px;font-size:14px;
+.hidden{display:none!important}
+
+.image-preview{
+ max-width:100%;
+ max-height:350px;
+ object-fit:contain;
+ display:block;
+ margin:10px auto;
+ border:1px solid #ddd;
+ border-radius:6px;
 }
 
-.small{font-size:12px;color:#666}
+.file-label{
+ display:block;
+ padding:14px;
+ text-align:center;
+ background:#e8f2ff;
+ color:#1769aa;
+ border:2px dashed #1769aa;
+ border-radius:8px;
+ cursor:pointer;
+ margin:12px 0;
+}
+
+#imageFile{display:none}
+
+@media(max-width:450px){
+ .dashboard{grid-template-columns:1fr}
+ .menu-box{min-height:145px}
+ .home-title{margin:25px 0}
+}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- HOME PAGE -->
 
-<h2>SMART LINE SCANNER</h2>
+<div id="homePage" class="page active">
 
-<!-- MASTER DATA -->
-<div class="section">
+<div class="container">
 
-<h3>1. Master Data</h3>
+<div class="home-title">
+ <h1>SMART LINE SCANNER</h1>
+ <p>Select your required option</p>
+</div>
+
+<div class="dashboard">
+
+<div class="menu-box menu1" onclick="openPage('dataPage')">
+ <div class="symbol">🗄️</div>
+ <h3>1. DATA SAVE</h3>
+ <p>Save Master Data</p>
+</div>
+
+<div class="menu-box menu2" onclick="openPage('scanPage')">
+ <div class="symbol">📷</div>
+ <h3>2. SCAN PAGE</h3>
+ <p>Camera Scan & Duplicate Check</p>
+</div>
+
+<div class="menu-box menu3" onclick="openPage('imagePage')">
+ <div class="symbol">🖼️</div>
+ <h3>3. FULL IMAGE SCAN</h3>
+ <p>Image to Text Conversion</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- PAGE 1: DATA SAVE -->
+
+<div id="dataPage" class="page">
+
+<div class="container">
+
+<div class="header">
+ <button class="home-btn" onclick="goHome()">← HOME</button>
+ <h2>DATA SAVE</h2>
+</div>
+
+<h3>Master Data</h3>
 
 <p class="small">
-Yahan pehle se saved data rakhein. Har line ko alag record maana jayega.
+Pehle se available data yahan save karein.
+Har line ko ek alag record maana jayega.
 </p>
 
 <textarea id="masterData"
-placeholder="9876543210&#10;9876543211&#10;9876543212"></textarea>
+placeholder="Example:&#10;9876543210&#10;9876543211&#10;9876543212"></textarea>
 
 <button class="green" onclick="saveMasterData()">
 SAVE MASTER DATA
@@ -162,10 +357,9 @@ Master Records: 0
 
 <hr>
 
-<h3>Google Sheet Connection</h3>
+<h3>Google Sheet Import</h3>
 
-<input id="sheetUrl"
-placeholder="Google Sheet URL paste karein">
+<input id="sheetUrl" placeholder="Google Sheet URL paste karein">
 
 <button class="blue" onclick="copySheetLink()">
 COPY SHEET LINK
@@ -176,25 +370,44 @@ LOAD GOOGLE SHEET DATA
 </button>
 
 <p class="small">
-Google Sheet public/published honi chahiye. Sheet mein data ek column mein rakhein.
+Google Sheet public ya published honi chahiye.
+Data import hone ke baad Master Data replace ho jayega.
 </p>
-
-</div>
 
 <hr>
 
-<!-- CAMERA -->
-<div class="section">
+<h3>Saved Master Data</h3>
 
-<h3>2. Camera Scanner</h3>
+<div id="masterList"></div>
+
+<button class="red" onclick="clearMasterData()">
+CLEAR MASTER DATA
+</button>
+
+</div>
+</div>
+
+
+<!-- PAGE 2: CAMERA SCAN -->
+
+<div id="scanPage" class="page">
+
+<div class="container">
+
+<div class="header">
+ <button class="home-btn" onclick="goHome()">← HOME</button>
+ <h2>CAMERA SCAN</h2>
+</div>
+
+<h3>Live Camera</h3>
 
 <div class="camera-frame">
-<video id="video" autoplay playsinline muted></video>
+ <video id="video" autoplay playsinline muted></video>
 </div>
 
-<div class="frame-label">
-Place required text inside green frame
-</div>
+<p class="small" style="text-align:center">
+Place required text inside the green frame.
+</p>
 
 <button class="blue" onclick="startCamera()">
 START CAMERA
@@ -208,43 +421,39 @@ CAPTURE IMAGE
 STOP CAMERA
 </button>
 
-<p class="status" id="status">
+<p class="status" id="cameraStatus">
 Camera permission required.
 </p>
 
-</div>
-
-<!-- IMAGE CROP -->
 <div id="cropSection" class="section hidden">
 
-<h3>3. Captured Image</h3>
+<h3>Captured Image</h3>
 
 <p class="small">
-Image par finger se area select karein.
+Finger se image par crop area select karein.
 Crop optional hai.
 </p>
 
-<canvas id="imageCanvas"></canvas>
+<canvas id="cameraCanvas"></canvas>
 
 <button class="orange" onclick="useCrop()">
 USE SELECTED CROP
 </button>
 
-<button class="gray" onclick="useFullImage()">
+<button class="gray" onclick="useFullCameraImage()">
 USE FULL FRAME
 </button>
 
 </div>
 
-<!-- OCR RESULT -->
-<div id="resultSection" class="section hidden">
+<div id="scanResult" class="section hidden">
 
-<h3>4. Scanned Text</h3>
+<h3>Scanned Text</h3>
 
-<textarea id="textData"
+<textarea id="scanText"
 placeholder="Scanned text yahan aayega..."></textarea>
 
-<button class="green" onclick="saveData()">
+<button class="green" onclick="saveScannedData()">
 SUBMIT / SAVE
 </button>
 
@@ -252,41 +461,89 @@ SUBMIT / SAVE
 
 <hr>
 
-<!-- SAVED RECORDS -->
-<div class="section">
+<h3>Saved Scan Records</h3>
 
-<h3>5. Saved Records</h3>
-
-<div id="total">Total Records: 0</div>
+<div id="scanTotal">Total Records: 0</div>
 
 <button class="blue" onclick="downloadExcel()">
 DOWNLOAD EXCEL
 </button>
 
-<button class="red" onclick="clearRecords()">
-CLEAR ALL SCANNED RECORDS
-</button>
-
 <div id="records"></div>
 
 </div>
-
 </div>
 
+
+<!-- PAGE 3: FULL IMAGE SCAN -->
+
+<div id="imagePage" class="page">
+
+<div class="container">
+
+<div class="header">
+ <button class="home-btn" onclick="goHome()">← HOME</button>
+ <h2>FULL IMAGE SCAN</h2>
+</div>
+
+<h3>Select Full Image</h3>
+
+<p class="small">
+Gallery se image select karein. Poore image ka text OCR se nikala jayega.
+</p>
+
+<label class="file-label" for="imageFile">
+📁 SELECT IMAGE FROM GALLERY
+</label>
+
+<input type="file" id="imageFile" accept="image/*"
+onchange="loadFullImage(event)">
+
+<img id="fullImagePreview" class="image-preview hidden">
+
+<button class="green" onclick="scanFullImage()">
+SCAN FULL IMAGE
+</button>
+
+<p class="status" id="imageStatus">
+Select an image to start.
+</p>
+
+<hr>
+
+<h3>Converted Text</h3>
+
+<textarea id="fullImageText"
+placeholder="Full image ka text yahan aayega..."></textarea>
+
+<button class="blue" onclick="copyFullText()">
+COPY TEXT
+</button>
+
+<button class="orange" onclick="downloadText()">
+DOWNLOAD TEXT FILE
+</button>
+
+<button class="green" onclick="saveImageText()">
+SAVE IN SCAN RECORDS
+</button>
+
+</div>
+</div>
+
+
 <!-- DUPLICATE POPUP -->
+
 <div id="popup" class="hidden">
 
 <div class="popup-box">
 
 <h3>⚠ DUPLICATE DATA FOUND!</h3>
 
-<p id="popupMessage">
-Duplicate data found.
-</p>
+<p id="popupMessage">Duplicate found.</p>
 
 <div id="popupDuplicates"
-style="background:#ffe1e1;padding:10px;border-radius:6px;
-font-weight:bold;overflow-wrap:anywhere">
+style="background:#ffe1e1;padding:10px;border-radius:6px;font-weight:bold;overflow-wrap:anywhere">
 </div>
 
 <button class="blue" onclick="closePopup()">
@@ -294,31 +551,47 @@ OK
 </button>
 
 </div>
-
 </div>
+
 
 <script>
 
-const video=document.getElementById("video");
-const canvas=document.getElementById("imageCanvas");
-const ctx=canvas.getContext("2d");
+// PAGE NAVIGATION
 
-let stream=null;
-let captured=false;
-let selection=null;
-let drawing=false;
-let originalImage=new Image();
-let originalReady=false;
+function openPage(id){
 
-let records=JSON.parse(
- localStorage.getItem("scannerData")||"[]"
-);
+ document.querySelectorAll(".page").forEach(p=>{
+  p.classList.remove("active");
+ });
+
+ document.getElementById(id).classList.add("active");
+
+ window.scrollTo(0,0);
+
+}
+
+function goHome(){
+
+ stopCamera();
+
+ openPage("homePage");
+
+}
+
+
+// LOCAL STORAGE
 
 let masterData=JSON.parse(
  localStorage.getItem("masterData")||"[]"
 );
 
-// NORMALIZE DATA
+let records=JSON.parse(
+ localStorage.getItem("scannerData")||"[]"
+);
+
+
+// NORMALIZE
+
 function normalize(value){
 
  return String(value)
@@ -328,7 +601,9 @@ function normalize(value){
 
 }
 
-// MASTER DATA SAVE
+
+// MASTER DATA
+
 function saveMasterData(){
 
  const text=document.getElementById("masterData").value;
@@ -339,9 +614,7 @@ function saveMasterData(){
 
  masterData=[...new Set(masterData.map(normalize))];
 
- localStorage.setItem(
-  "masterData",JSON.stringify(masterData)
- );
+ localStorage.setItem("masterData",JSON.stringify(masterData));
 
  updateMasterCount();
 
@@ -349,69 +622,85 @@ function saveMasterData(){
 
 }
 
-// MASTER COUNT
 function updateMasterCount(){
 
  document.getElementById("masterCount").innerText=
  "Master Records: "+masterData.length;
 
+ showMasterList();
+
 }
 
-// LOAD MASTER DATA
-function initializeMaster(){
+function showMasterList(){
 
- document.getElementById("masterData").value=
- masterData.join("\n");
+ const box=document.getElementById("masterList");
+
+ box.innerHTML="";
+
+ masterData.forEach((item,index)=>{
+
+  const div=document.createElement("div");
+
+  div.className="record";
+  div.textContent=(index+1)+". "+item;
+
+  box.appendChild(div);
+
+ });
+
+}
+
+function clearMasterData(){
+
+ if(!confirm("Delete all Master Data?"))return;
+
+ masterData=[];
+
+ localStorage.setItem("masterData","[]");
+
+ document.getElementById("masterData").value="";
 
  updateMasterCount();
 
 }
 
-// COPY GOOGLE SHEET LINK
+
+// GOOGLE SHEET
+
 async function copySheetLink(){
 
  const url=document.getElementById("sheetUrl").value.trim();
 
  if(!url){
-  alert("Pehle Google Sheet URL enter karein.");
+  alert("Pehle Sheet URL enter karein.");
   return;
  }
 
  try{
   await navigator.clipboard.writeText(url);
-  alert("Sheet link copied!");
+  alert("Link copied!");
  }catch(e){
-  alert("Link copy nahi hua.");
+  alert("Copy failed.");
  }
 
 }
 
-// CONVERT GOOGLE SHEET LINK TO CSV URL
 function getCSVUrl(url){
 
- try{
+ const match=url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
 
-  const match=url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+ if(!match)return url;
 
-  if(!match) return url;
+ const id=match[1];
 
-  const id=match[1];
+ const gidMatch=url.match(/[?&#]gid=([0-9]+)/);
+ const gid=gidMatch?gidMatch[1]:"0";
 
-  const gidMatch=url.match(/[?&#]gid=([0-9]+)/);
-  const gid=gidMatch?gidMatch[1]:"0";
-
-  return "https://docs.google.com/spreadsheets/d/"+
-  id+"/export?format=csv&gid="+gid;
-
- }catch(e){
-
-  return url;
-
- }
+ return "https://docs.google.com/spreadsheets/d/"+
+ id+"/export?format=csv&gid="+gid;
 
 }
 
-// LOAD GOOGLE SHEET
 async function loadGoogleSheet(){
 
  const url=document.getElementById("sheetUrl").value.trim();
@@ -421,18 +710,14 @@ async function loadGoogleSheet(){
   return;
  }
 
- document.getElementById("status").innerText=
- "Loading Google Sheet...";
-
  try{
 
-  const csvUrl=getCSVUrl(url);
+  document.getElementById("masterCount").innerText=
+  "Loading Google Sheet...";
 
-  const response=await fetch(csvUrl);
+  const response=await fetch(getCSVUrl(url));
 
-  if(!response.ok){
-   throw new Error("Sheet access nahi mila.");
-  }
+  if(!response.ok)throw new Error("Sheet access nahi mila.");
 
   const csv=await response.text();
 
@@ -440,46 +725,52 @@ async function loadGoogleSheet(){
 
   const sheet=workbook.Sheets[workbook.SheetNames[0]];
 
-  const rows=XLSX.utils.sheet_to_json(
-   sheet,{header:1,defval:""}
-  );
+  const rows=XLSX.utils.sheet_to_json(sheet,{
+   header:1,defval:""
+  });
 
   const values=rows.flat()
   .map(x=>String(x).trim())
   .filter(x=>normalize(x)!=="");
 
-  masterData=[
-   ...new Set(values.map(normalize))
-  ];
+  masterData=[...new Set(values.map(normalize))];
 
-  localStorage.setItem(
-   "masterData",JSON.stringify(masterData)
-  );
+  localStorage.setItem("masterData",JSON.stringify(masterData));
 
   document.getElementById("masterData").value=
-   masterData.join("\n");
+  masterData.join("\n");
 
   updateMasterCount();
-
-  document.getElementById("status").innerText=
-   "Google Sheet data loaded successfully.";
 
   alert("Google Sheet Data Loaded!\nTotal: "+masterData.length);
 
  }catch(error){
 
-  document.getElementById("status").innerText=
-   "Google Sheet loading failed.";
+  updateMasterCount();
 
-  alert("Sheet load nahi hui.\n"+
-  "Check karein ki sheet public/published hai.\n"+
-  error.message);
+  alert("Sheet load nahi hui. Check karein ki sheet public/published hai.\n"+error.message);
 
  }
 
 }
 
-// CAMERA START
+
+// CAMERA
+
+const video=document.getElementById("video");
+
+const cameraCanvas=document.getElementById("cameraCanvas");
+
+const cameraCtx=cameraCanvas.getContext("2d");
+
+let stream=null;
+let captured=false;
+let selection=null;
+let drawing=false;
+let originalImage=new Image();
+let originalReady=false;
+
+
 async function startCamera(){
 
  try{
@@ -504,10 +795,11 @@ async function startCamera(){
   });
 
   video.srcObject=stream;
+
   await video.play();
 
-  document.getElementById("status").innerText=
-   "Camera ready.";
+  document.getElementById("cameraStatus").innerText=
+  "Camera ready.";
 
  }catch(error){
 
@@ -517,7 +809,7 @@ async function startCamera(){
 
 }
 
-// CAMERA STOP
+
 function stopCamera(){
 
  if(stream){
@@ -525,21 +817,23 @@ function stopCamera(){
   stream.getTracks().forEach(track=>track.stop());
 
   stream=null;
+
   video.srcObject=null;
 
  }
 
- document.getElementById("status").innerText=
+ document.getElementById("cameraStatus").innerText=
  "Camera stopped.";
 
 }
 
-// CAPTURE IMAGE
+
 function captureFrame(){
 
  if(!stream || !video.videoWidth){
 
   alert("Camera start karein.");
+
   return;
 
  }
@@ -566,17 +860,16 @@ function captureFrame(){
 
  }
 
- canvas.width=Math.round(sw);
- canvas.height=Math.round(sh);
+ cameraCanvas.width=Math.round(sw);
+ cameraCanvas.height=Math.round(sh);
 
- ctx.drawImage(
-  video,
-  sx,sy,sw,sh,
-  0,0,canvas.width,canvas.height
+ cameraCtx.drawImage(
+  video,sx,sy,sw,sh,
+  0,0,cameraCanvas.width,cameraCanvas.height
  );
 
- // SAVE ORIGINAL IMAGE SEPARATELY
  originalImage=new Image();
+
  originalReady=false;
 
  originalImage.onload=()=>{
@@ -586,30 +879,32 @@ function captureFrame(){
 
  };
 
- originalImage.src=canvas.toDataURL("image/png");
+ originalImage.src=cameraCanvas.toDataURL("image/png");
 
  captured=true;
  selection=null;
 
- document.getElementById("cropSection")
- .classList.remove("hidden");
+ document.getElementById("cropSection").classList.remove("hidden");
 
- document.getElementById("resultSection")
- .classList.add("hidden");
+ document.getElementById("scanResult").classList.add("hidden");
 
- document.getElementById("status").innerText=
- "Image captured. Select crop or use full frame.";
+ document.getElementById("cameraStatus").innerText=
+ "Image captured. Crop optional.";
 
 }
 
-// DRAW IMAGE AND SELECTION
+
+// CROP SELECTION
+
 function drawSelection(){
 
  if(!originalReady)return;
 
- ctx.clearRect(0,0,canvas.width,canvas.height);
+ cameraCtx.clearRect(
+  0,0,cameraCanvas.width,cameraCanvas.height
+ );
 
- ctx.drawImage(originalImage,0,0);
+ cameraCtx.drawImage(originalImage,0,0);
 
  if(!selection)return;
 
@@ -619,41 +914,46 @@ function drawSelection(){
  const w=Math.abs(selection.x2-selection.x1);
  const h=Math.abs(selection.y2-selection.y1);
 
- ctx.fillStyle="rgba(0,0,0,0.45)";
- ctx.fillRect(0,0,canvas.width,canvas.height);
+ cameraCtx.fillStyle="rgba(0,0,0,0.45)";
 
- ctx.clearRect(x,y,w,h);
-
- ctx.drawImage(
-  originalImage,x,y,w,h,x,y,w,h
+ cameraCtx.fillRect(
+  0,0,cameraCanvas.width,cameraCanvas.height
  );
 
- ctx.strokeStyle="#00ee66";
- ctx.lineWidth=3;
- ctx.strokeRect(x,y,w,h);
+ cameraCtx.clearRect(x,y,w,h);
+
+ cameraCtx.drawImage(originalImage,x,y,w,h,x,y,w,h);
+
+ cameraCtx.strokeStyle="#00ee66";
+ cameraCtx.lineWidth=3;
+
+ cameraCtx.strokeRect(x,y,w,h);
 
 }
 
-// POINTER POSITION
+
 function getPos(e){
 
- const rect=canvas.getBoundingClientRect();
+ const rect=cameraCanvas.getBoundingClientRect();
 
  return{
-  x:(e.clientX-rect.left)*canvas.width/rect.width,
-  y:(e.clientY-rect.top)*canvas.height/rect.height
+
+  x:(e.clientX-rect.left)*cameraCanvas.width/rect.width,
+
+  y:(e.clientY-rect.top)*cameraCanvas.height/rect.height
+
  };
 
 }
 
-// SELECT CROP
-canvas.addEventListener("pointerdown",e=>{
+
+cameraCanvas.addEventListener("pointerdown",e=>{
 
  if(!captured || !originalReady)return;
 
  e.preventDefault();
 
- canvas.setPointerCapture(e.pointerId);
+ cameraCanvas.setPointerCapture(e.pointerId);
 
  const p=getPos(e);
 
@@ -668,7 +968,8 @@ canvas.addEventListener("pointerdown",e=>{
 
 });
 
-canvas.addEventListener("pointermove",e=>{
+
+cameraCanvas.addEventListener("pointermove",e=>{
 
  if(!drawing)return;
 
@@ -680,6 +981,7 @@ canvas.addEventListener("pointermove",e=>{
  drawSelection();
 
 });
+
 
 function finishCrop(e){
 
@@ -696,17 +998,21 @@ function finishCrop(e){
 
 }
 
-canvas.addEventListener("pointerup",finishCrop);
-canvas.addEventListener("pointercancel",()=>{
+cameraCanvas.addEventListener("pointerup",finishCrop);
+
+cameraCanvas.addEventListener("pointercancel",()=>{
  drawing=false;
 });
 
-// USE CROP
+
+// CAMERA OCR
+
 async function useCrop(){
 
  if(!selection || !originalReady){
 
-  alert("Pehle crop area select karein.");
+  alert("Pehle area select karein.");
+
   return;
 
  }
@@ -720,6 +1026,7 @@ async function useCrop(){
  if(w<10 || h<10){
 
   alert("Bada area select karein.");
+
   return;
 
  }
@@ -733,47 +1040,46 @@ async function useCrop(){
   originalImage,x,y,w,h,0,0,w,h
  );
 
- await readText(temp);
+ await readCameraText(temp);
 
 }
 
-// USE FULL IMAGE
-async function useFullImage(){
+
+async function useFullCameraImage(){
 
  if(!originalReady){
 
   alert("Image ready nahi hai.");
+
   return;
 
  }
 
- await readText(originalImage);
+ await readCameraText(originalImage);
 
 }
 
-// OCR
-async function readText(source){
 
- document.getElementById("resultSection")
- .classList.remove("hidden");
+async function readCameraText(source){
 
- document.getElementById("status").innerText=
+ document.getElementById("scanResult").classList.remove("hidden");
+
+ document.getElementById("cameraStatus").innerText=
  "Reading text...";
 
- document.getElementById("textData").value="";
+ document.getElementById("scanText").value="";
 
  try{
 
   const result=await Tesseract.recognize(
-   source,
-   "eng",
+   source,"eng",
    {
     logger:m=>{
 
      if(m.status==="recognizing text"){
 
-      document.getElementById("status").innerText=
-       "Scanning: "+Math.round(m.progress*100)+"%";
+      document.getElementById("cameraStatus").innerText=
+      "Scanning: "+Math.round(m.progress*100)+"%";
 
      }
 
@@ -781,22 +1087,24 @@ async function readText(source){
    }
   );
 
-  document.getElementById("textData").value=
-   result.data.text.trim();
+  document.getElementById("scanText").value=
+  result.data.text.trim();
 
-  document.getElementById("status").innerText=
-   "Scan complete. Check and submit.";
+  document.getElementById("cameraStatus").innerText=
+  "Scan complete. Check and submit.";
 
  }catch(error){
 
-  document.getElementById("status").innerText=
-   "OCR failed: "+error.message;
+  document.getElementById("cameraStatus").innerText=
+  "OCR failed: "+error.message;
 
  }
 
 }
 
-// CHECK DUPLICATES
+
+// DUPLICATE CHECK
+
 function checkDuplicates(text){
 
  const lines=text.split(/\r?\n/)
@@ -808,45 +1116,58 @@ function checkDuplicates(text){
  return lines.map(line=>({
 
   text:line,
+
   duplicate:masterSet.has(normalize(line))
 
  }));
 
 }
 
-// SAVE SCANNED DATA
-function saveData(){
 
- const text=document.getElementById("textData").value.trim();
+// SAVE SCAN DATA
+
+function saveScannedData(){
+
+ const text=document.getElementById("scanText").value.trim();
 
  if(!text){
 
   alert("Please scan or enter text.");
+
   return;
 
  }
+
+ saveRecord(text);
+
+ document.getElementById("scanText").value="";
+
+}
+
+
+// SAVE RECORD FUNCTION
+
+function saveRecord(text){
 
  const checked=checkDuplicates(text);
 
  const duplicates=checked.filter(x=>x.duplicate);
 
- const newRecord={
+ records.push({
 
   Text:text,
+
   Date:new Date().toLocaleString("en-IN"),
+
   Lines:checked,
+
   HasDuplicate:duplicates.length>0
 
- };
+ });
 
- // SAVE ALL DATA, INCLUDING DUPLICATES
- records.push(newRecord);
+ localStorage.setItem("scannerData",JSON.stringify(records));
 
- localStorage.setItem(
-  "scannerData",JSON.stringify(records)
- );
-
- document.getElementById("textData").value="";
+ showRecords();
 
  if(duplicates.length>0){
 
@@ -854,16 +1175,15 @@ function saveData(){
 
  }else{
 
-  document.getElementById("status").innerText=
-   "New data saved successfully.";
-
-  showRecords();
+  alert("New data saved successfully!");
 
  }
 
 }
 
+
 // DUPLICATE POPUP
+
 function showDuplicatePopup(duplicates){
 
  const box=document.getElementById("popupDuplicates");
@@ -875,6 +1195,7 @@ function showDuplicatePopup(duplicates){
   const div=document.createElement("div");
 
   div.textContent=item.text;
+
   div.style.padding="5px";
 
   box.appendChild(div);
@@ -888,16 +1209,12 @@ function showDuplicatePopup(duplicates){
 
 }
 
-// OK BUTTON
+
 function closePopup(){
 
  document.getElementById("popup").classList.add("hidden");
 
- // SHOW SAVED DATA AFTER OK
  showRecords();
-
- document.getElementById("status").innerText=
- "Duplicate data saved and highlighted.";
 
  document.getElementById("records").scrollIntoView({
   behavior:"smooth"
@@ -905,10 +1222,12 @@ function closePopup(){
 
 }
 
+
 // SHOW RECORDS
+
 function showRecords(){
 
- document.getElementById("total").innerText=
+ document.getElementById("scanTotal").innerText=
  "Total Records: "+records.length;
 
  const box=document.getElementById("records");
@@ -918,40 +1237,33 @@ function showRecords(){
  records.forEach((item,index)=>{
 
   const div=document.createElement("div");
+
   div.className="record";
 
   const heading=document.createElement("b");
 
   heading.textContent=
-   "Record "+(index+1)+" - "+item.Date;
+  "Record "+(index+1)+" - "+item.Date;
 
   div.appendChild(heading);
 
-  let lines=item.Lines;
-
-  // SUPPORT OLD SAVED RECORDS
-  if(!lines){
-
-   lines=checkDuplicates(item.Text);
-
-  }
+  const lines=item.Lines || checkDuplicates(item.Text);
 
   lines.forEach(line=>{
 
    const row=document.createElement("div");
 
    row.className="record-line "+
-    (line.duplicate?"duplicate-line":"new-line");
+   (line.duplicate?"duplicate-line":"new-line");
 
    row.textContent=line.text;
 
    const tag=document.createElement("span");
 
    tag.className="tag "+
-    (line.duplicate?"tag-duplicate":"tag-new");
+   (line.duplicate?"tag-duplicate":"tag-new");
 
-   tag.textContent=
-    line.duplicate?"DUPLICATE":"NEW";
+   tag.textContent=line.duplicate?"DUPLICATE":"NEW";
 
    row.appendChild(tag);
 
@@ -988,27 +1300,15 @@ function showRecords(){
 
 }
 
-// CLEAR ALL RECORDS
-function clearRecords(){
 
- if(!confirm("Delete all scanned records?"))return;
+// EXCEL DOWNLOAD
 
- records=[];
-
- localStorage.setItem(
-  "scannerData",JSON.stringify(records)
- );
-
- showRecords();
-
-}
-
-// DOWNLOAD EXCEL
 function downloadExcel(){
 
  if(!records.length){
 
   alert("No records found.");
+
   return;
 
  }
@@ -1017,15 +1317,18 @@ function downloadExcel(){
 
  records.forEach((item,index)=>{
 
-  let lines=item.Lines || checkDuplicates(item.Text);
+  const lines=item.Lines || checkDuplicates(item.Text);
 
   lines.forEach(line=>{
 
    data.push({
 
     "Record No":index+1,
+
     "Scanned Text":line.text,
+
     "Status":line.duplicate?"DUPLICATE":"NEW",
+
     "Date":item.Date
 
    });
@@ -1046,8 +1349,180 @@ function downloadExcel(){
 
 }
 
+
+// PAGE 3: FULL IMAGE SCAN
+
+let selectedFullImage=null;
+
+function loadFullImage(event){
+
+ const file=event.target.files[0];
+
+ if(!file)return;
+
+ if(!file.type.startsWith("image/")){
+
+  alert("Please select an image file.");
+
+  return;
+
+ }
+
+ selectedFullImage=file;
+
+ const preview=document.getElementById("fullImagePreview");
+
+ preview.src=URL.createObjectURL(file);
+
+ preview.classList.remove("hidden");
+
+ document.getElementById("imageStatus").innerText=
+ "Image selected. Click Scan Full Image.";
+
+ document.getElementById("fullImageText").value="";
+
+}
+
+
+// FULL IMAGE OCR
+
+async function scanFullImage(){
+
+ if(!selectedFullImage){
+
+  alert("Pehle image select karein.");
+
+  return;
+
+ }
+
+ document.getElementById("imageStatus").innerText=
+ "Reading full image...";
+
+ document.getElementById("fullImageText").value="";
+
+ try{
+
+  const result=await Tesseract.recognize(
+   selectedFullImage,
+   "eng",
+   {
+    logger:m=>{
+
+     if(m.status==="recognizing text"){
+
+      document.getElementById("imageStatus").innerText=
+      "Scanning: "+Math.round(m.progress*100)+"%";
+
+     }
+
+    }
+   }
+  );
+
+  document.getElementById("fullImageText").value=
+  result.data.text.trim();
+
+  document.getElementById("imageStatus").innerText=
+  "Full image converted to text successfully.";
+
+ }catch(error){
+
+  document.getElementById("imageStatus").innerText=
+  "Image scanning failed: "+error.message;
+
+ }
+
+}
+
+
+// COPY FULL IMAGE TEXT
+
+async function copyFullText(){
+
+ const text=document.getElementById("fullImageText").value;
+
+ if(!text.trim()){
+
+  alert("No text available.");
+
+  return;
+
+ }
+
+ try{
+
+  await navigator.clipboard.writeText(text);
+
+  alert("Text copied successfully!");
+
+ }catch(error){
+
+  alert("Copy failed. Select and copy manually.");
+
+ }
+
+}
+
+
+// DOWNLOAD TEXT
+
+function downloadText(){
+
+ const text=document.getElementById("fullImageText").value;
+
+ if(!text.trim()){
+
+  alert("No text available.");
+
+  return;
+
+ }
+
+ const blob=new Blob([text],{
+  type:"text/plain;charset=utf-8"
+ });
+
+ const url=URL.createObjectURL(blob);
+
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download="Scanned_Image_Text.txt";
+
+ a.click();
+
+ URL.revokeObjectURL(url);
+
+}
+
+
+// SAVE IMAGE OCR TEXT IN SCAN RECORDS
+
+function saveImageText(){
+
+ const text=document.getElementById("fullImageText").value.trim();
+
+ if(!text){
+
+  alert("Pehle image scan karein.");
+
+  return;
+
+ }
+
+ saveRecord(text);
+
+}
+
+
 // INITIALIZE
-initializeMaster();
+
+document.getElementById("masterData").value=
+masterData.join("\n");
+
+updateMasterCount();
+
 showRecords();
 
 </script>
